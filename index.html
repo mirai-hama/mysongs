@@ -230,6 +230,19 @@ button.previewChar.selected{background:#e8dcff;outline:1px solid #b79beb}
  pointer-events:none
 }
 
+/* コード選択表：タップした文字の近くに重ねて表示 */
+#chordPicker{
+ position:fixed;
+ z-index:20;
+ width:min(360px,calc(100vw - 16px));
+ max-height:55vh;
+ overflow-y:auto;
+ overflow-x:hidden;
+ overscroll-behavior:contain;
+ margin:0!important;
+ box-shadow:0 8px 28px #38205a40;
+}
+
 /* コード選択表：B7などが端で欠けないようにグリッド表示 */
 .palette{
  display:grid;
@@ -415,7 +428,6 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
   </div>
   <div id="lyricPreview"></div>
 
-  <!-- 変更点②：コードパネルを歌詞プレビューの直後に配置 -->
   <div id="chordPicker" class="card hidden" style="margin:10px 0 0;padding:12px">
    <div class="topline">
     <strong id="pickerTitle">コードを選択</strong>
@@ -462,7 +474,6 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
   <h2 id="sheetTitle"></h2>
   <div id="sheetSettings"></div>
 
-  <!-- 変更点①：スクロール操作を曲名・設定のすぐ下に配置 -->
   <div class="scrolltools no-print">
    <button id="scrollStartBtn">▶ 自動スクロール</button>
    <button id="scrollPauseBtn" class="secondary">一時停止</button>
@@ -825,10 +836,8 @@ function renderEditorPreview(){
 
     ch.classList.add('selected');
     $('pickerTitle').textContent='「'+token+'」に付けるコード';
-    $('chordPicker').classList.remove('hidden');
     updatePaletteSelection(ch.dataset.code||'');
-
-    /* 変更点②：パネルまで自動スクロールしない */
+    showPickerNear(ch);
    });
 
    row.append(ch);
@@ -838,6 +847,35 @@ function renderEditorPreview(){
   area.append(row);
   globalStart+=line.length+1;
  });
+}
+
+/* タップした文字の位置に合わせてコード表を重ねる */
+function showPickerNear(ch){
+ const picker=$('chordPicker');
+ const rect=ch.getBoundingClientRect();
+ const gap=8;
+
+ picker.classList.remove('hidden');
+
+ /* 表示後の大きさを取得して、画面からはみ出さない位置に調整 */
+ picker.style.visibility='hidden';
+ picker.style.left=gap+'px';
+ picker.style.top=gap+'px';
+
+ const pickerWidth=picker.offsetWidth;
+ const pickerHeight=picker.offsetHeight;
+ const viewportWidth=document.documentElement.clientWidth;
+ const viewportHeight=document.documentElement.clientHeight;
+
+ let left=rect.left+rect.width/2-pickerWidth/2;
+ let top=rect.top+rect.height/2-pickerHeight/2;
+
+ left=Math.max(gap,Math.min(left,viewportWidth-pickerWidth-gap));
+ top=Math.max(gap,Math.min(top,viewportHeight-pickerHeight-gap));
+
+ picker.style.left=left+'px';
+ picker.style.top=top+'px';
+ picker.style.visibility='';
 }
 
 function updatePaletteSelection(code){
