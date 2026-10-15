@@ -41,13 +41,36 @@ label{display:block;font-size:13px;font-weight:700;margin:12px 0 6px}.hint{font-
 .scrolltools input[type=range]{width:120px;padding:0}
 #editorText{min-height:160px;line-height:1.65;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
 .notice{padding:10px 12px;background:#f0eafb;border-radius:12px;font-size:12px;line-height:1.6;color:#513b79}
-#lyricPreview{overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;min-height:60px}
+#lyricPreview{overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;min-height:60px;touch-action:pan-x pan-y}
 .previewLine{display:flex;align-items:flex-end;min-height:53px;white-space:pre;margin-bottom:5px}
-.previewChar{display:inline-flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:9px;min-height:48px;cursor:pointer;border-radius:4px}
-.previewChar:active{background:#eee5fb}
-.previewChar.selected{background:#e8dcff;outline:1px solid #b79beb}
-.previewChord{height:19px;font-size:12px;font-weight:800;color:var(--purple);white-space:nowrap}
-.previewLyric{font-size:16px;line-height:1.5;white-space:pre}
+button.previewChar{
+ appearance:none;
+ -webkit-appearance:none;
+ display:inline-flex;
+ flex-direction:column;
+ align-items:center;
+ justify-content:flex-end;
+ flex:0 0 auto;
+ min-width:9px;
+ min-height:48px;
+ margin:0;
+ padding:0;
+ border:0;
+ border-radius:4px;
+ background:transparent;
+ color:inherit;
+ box-shadow:none;
+ font:inherit;
+ font-weight:400;
+ cursor:pointer;
+ touch-action:manipulation;
+ -webkit-tap-highlight-color:#d9c8ff88;
+}
+button.previewChar:active{background:#eee5fb;transform:none}
+button.previewChar:focus-visible{outline:2px solid #8b6ad0;outline-offset:1px}
+button.previewChar.selected{background:#e8dcff;outline:1px solid #b79beb}
+.previewChord{height:19px;font-size:12px;font-weight:800;color:var(--purple);white-space:nowrap;pointer-events:none}
+.previewLyric{font-size:16px;line-height:1.5;white-space:pre;pointer-events:none}
 .palette{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
 .palette button{min-width:48px;padding:10px 9px}
 .palette button.chosen{background:#38205a;outline:2px solid #bca5e7}
@@ -100,10 +123,6 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
    <div id="chordPalette" class="palette"></div>
    <p class="hint">Fなどのセーハコードは、演奏画面で黒い棒として表示されます。</p>
   </div>
-  <details style="margin-top:14px">
-   <summary class="hint">コードを文字で直接入力したい場合</summary>
-   <p class="hint">歌詞の前に [G] や [Am] のように入力します。例：[G]君を忘れない</p>
-  </details>
   <div class="toolbar" style="margin-top:14px">
    <button id="saveSongBtn2">保存する</button><button id="deleteSongBtn" class="danger">この曲を削除</button>
   </div>
@@ -168,7 +187,7 @@ const CHORDS={
 'C#':[-1,4,6,6,6,4],'C#m':[-1,4,6,6,5,4],'D#':[-1,6,8,8,8,6],'D#m':[-1,6,8,8,7,6],
 'F#m7':[2,4,2,2,2,2],'G#m':[4,6,6,4,4,4],'G#m7':[4,6,4,4,4,4],
 'Eb':[-1,6,8,8,8,6],'Ab':[-1,4,6,6,5,4],'Abm':[-1,4,6,6,4,4],
-'Dsus2':[-1,-1,0,2,3,0],'Asus2':[-1,0,2,2,0,0],'Cadd9':[-1,3,2,0,3,0],
+'Dsus2':[-1,-1,0,2,3,0],'Asus2':[-1,0,2,2,0,0],
 'G6':[3,2,0,0,0,0],'Em9':[0,2,0,0,0,2],'A9':[-1,0,2,4,2,3],
 'Fmaj7/C':[-1,3,3,2,1,0],'C/E':[0,3,2,0,1,0]
 };
@@ -182,7 +201,6 @@ function diagramSvg(name){
  for(let f=0;f<=4;f++){const x=left+f*fretW;svg+=`<line x1="${x}" y1="${top+3}" x2="${x}" y2="${top+3+5*stringH}" stroke="${f===0&&base===0?'#222':'#999'}" stroke-width="${f===0&&base===0?'2.2':'.65'}"/>`}
  if(base>0)svg+=`<text x="0" y="10" font-size="5" fill="#555">${base+1}F</text>`;
 
- /* セーハ：低いフレットが離れた弦にも使われている場合は黒い棒で表示 */
  const lowest=active.length?Math.min(...active):0;
  const lowIndices=fing.map((v,i)=>v===lowest&&v>0?i:-1).filter(i=>i>=0);
  let barre=null;
@@ -217,26 +235,55 @@ function renderEditorPreview(){
    if(token.startsWith('[')&&token.endsWith(']')){
     pending={code:token.slice(1,-1).trim(),start,end};continue;
    }
-   const ch=document.createElement('span');ch.className='previewChar';
+
+   /* 文字をタップ可能なボタンとして作成 */
+   const ch=document.createElement('button');
+   ch.type='button';
+   ch.className='previewChar';
    ch.dataset.pos=start;
-   if(pending){ch.dataset.markerStart=pending.start;ch.dataset.markerEnd=pending.end;ch.dataset.code=pending.code;}
-   const top=document.createElement('span');top.className='previewChord';top.textContent=pending?pending.code:'\u00a0';
-   const lyric=document.createElement('span');lyric.className='previewLyric';lyric.textContent=token;
+   ch.setAttribute('aria-label','「'+token+'」にコードを付ける');
+
+   if(pending){
+    ch.dataset.markerStart=pending.start;
+    ch.dataset.markerEnd=pending.end;
+    ch.dataset.code=pending.code;
+   }
+
+   const top=document.createElement('span');
+   top.className='previewChord';
+   top.textContent=pending?pending.code:'\u00a0';
+
+   const lyric=document.createElement('span');
+   lyric.className='previewLyric';
+   lyric.textContent=token;
+
    ch.append(top,lyric);
-   ch.onclick=()=>{
+
+   ch.addEventListener('click',()=>{
     pendingPos=Number(ch.dataset.pos);
-    pendingMarker=ch.dataset.markerStart!==undefined?{start:Number(ch.dataset.markerStart),end:Number(ch.dataset.markerEnd)}:null;
+    pendingMarker=ch.dataset.markerStart!==undefined
+     ?{start:Number(ch.dataset.markerStart),end:Number(ch.dataset.markerEnd)}
+     :null;
+
     document.querySelectorAll('.previewChar.selected').forEach(n=>n.classList.remove('selected'));
     ch.classList.add('selected');
+
     $('pickerTitle').textContent='「'+token+'」に付けるコード';
     $('chordPicker').classList.remove('hidden');
     updatePaletteSelection(ch.dataset.code||'');
-   };
-   row.append(ch);pending=null;
+
+    /* コード選択欄が画面内に見えるように移動 */
+    $('chordPicker').scrollIntoView({behavior:'smooth',block:'nearest'});
+   });
+
+   row.append(ch);
+   pending=null;
   }
-  area.append(row);globalStart+=line.length+1;
+  area.append(row);
+  globalStart+=line.length+1;
  });
 }
+
 function updatePaletteSelection(code){
  document.querySelectorAll('#chordPalette button').forEach(b=>b.classList.toggle('chosen',b.dataset.chord===code));
 }
@@ -250,7 +297,8 @@ function applyChord(name){
  }else{
   $('editorText').value=text.slice(0,pendingPos)+marker+text.slice(pendingPos);
  }
- hidePicker();renderEditorPreview();
+ hidePicker();
+ renderEditorPreview();
 }
 function removeChord(){
  if(pendingPos===null)return;
@@ -258,15 +306,21 @@ function removeChord(){
   const text=$('editorText').value;
   $('editorText').value=text.slice(0,pendingMarker.start)+text.slice(pendingMarker.end);
  }
- hidePicker();renderEditorPreview();
+ hidePicker();
+ renderEditorPreview();
 }
 function buildPalette(){
  const palette=$('chordPalette');palette.innerHTML='';
  Object.keys(CHORDS).sort((a,b)=>a.localeCompare(b,'en')).forEach(name=>{
-  const b=document.createElement('button');b.type='button';b.textContent=name;b.dataset.chord=name;
-  b.onclick=()=>applyChord(name);palette.append(b);
+  const b=document.createElement('button');
+  b.type='button';
+  b.textContent=name;
+  b.dataset.chord=name;
+  b.onclick=()=>applyChord(name);
+  palette.append(b);
  });
 }
+
 function makeSheet(body){
  const container=document.createElement('div');
  (body||'').replace(/\r/g,'').split('\n').forEach(line=>{
