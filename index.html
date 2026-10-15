@@ -415,6 +415,16 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
   </div>
   <div id="lyricPreview"></div>
 
+  <!-- 変更点②：コードパネルを歌詞プレビューの直後に配置 -->
+  <div id="chordPicker" class="card hidden" style="margin:10px 0 0;padding:12px">
+   <div class="topline">
+    <strong id="pickerTitle">コードを選択</strong>
+    <button id="removeChordBtn" class="smallbtn ghost">コードを外す</button>
+   </div>
+   <div id="chordPalette" class="palette"></div>
+   <p class="hint">Fなどのセーハコードは、演奏画面で黒い棒として表示されます。</p>
+  </div>
+
   <div class="card" style="margin:10px 0 0;padding:12px">
    <h3 class="sectiontitle">イントロ・間奏・アウトロなど</h3>
    <p class="hint">コード進行を1行ずつ入力します。イントロは曲の冒頭、アウトロは最後に表示されます。</p>
@@ -425,15 +435,6 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
    <textarea id="progressText" rows="4" spellcheck="false" placeholder="【イントロ】 G / C / D / F
 【間奏】 G C / D / F G
 【アウトロ】 C / G"></textarea>
-  </div>
-
-  <div id="chordPicker" class="card hidden" style="margin:10px 0 0;padding:12px">
-   <div class="topline">
-    <strong id="pickerTitle">コードを選択</strong>
-    <button id="removeChordBtn" class="smallbtn ghost">コードを外す</button>
-   </div>
-   <div id="chordPalette" class="palette"></div>
-   <p class="hint">Fなどのセーハコードは、演奏画面で黒い棒として表示されます。</p>
   </div>
 
   <div class="toolbar" style="margin-top:14px">
@@ -460,8 +461,8 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
 
   <h2 id="sheetTitle"></h2>
   <div id="sheetSettings"></div>
-  <div id="scrollArea"><div id="sheetContent" class="sheet compact"></div></div>
 
+  <!-- 変更点①：スクロール操作を曲名・設定のすぐ下に配置 -->
   <div class="scrolltools no-print">
    <button id="scrollStartBtn">▶ 自動スクロール</button>
    <button id="scrollPauseBtn" class="secondary">一時停止</button>
@@ -469,6 +470,8 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
     速度 <input id="speedRange" type="range" min="1" max="10" value="3"><span id="speedValue">3</span>
    </label>
   </div>
+
+  <div id="scrollArea"><div id="sheetContent" class="sheet compact"></div></div>
 
   <p class="hint no-print">演奏画面は縦方向にスクロールできます。印刷画面ではA4向けのレイアウトになります。</p>
  </div>
@@ -824,7 +827,8 @@ function renderEditorPreview(){
     $('pickerTitle').textContent='「'+token+'」に付けるコード';
     $('chordPicker').classList.remove('hidden');
     updatePaletteSelection(ch.dataset.code||'');
-    $('chordPicker').scrollIntoView({behavior:'smooth',block:'nearest'});
+
+    /* 変更点②：パネルまで自動スクロールしない */
    });
 
    row.append(ch);
