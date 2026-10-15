@@ -34,13 +34,16 @@ label{display:block;font-size:13px;font-weight:700;margin:12px 0 6px}
 .hidden{display:none!important}
 .sectiontitle{font-size:17px;margin:6px 0 10px}
 .topline{display:flex;align-items:center;justify-content:space-between;gap:8px}
-#sheetTitle{font-size:20px;margin:2px 0 12px}
+#sheetTitle{font-size:20px;margin:2px 0 8px}
+.song-settings{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 12px}
+.setting-pill{display:inline-block;background:#eee7fa;color:#4d347b;border:1px solid #d8c8f1;border-radius:999px;padding:5px 10px;font-size:12px;font-weight:750}
+.setting-pill.down{background:#fff0d9;color:#80500b;border-color:#f0d29e}
 .sheet{background:white;border:1px solid var(--line);border-radius:16px;padding:14px;overflow-wrap:anywhere}
 .sheetline{display:flex;flex-wrap:wrap;align-items:flex-end;line-height:1.6;min-height:1.6em;white-space:pre-wrap;margin:0 0 5px}
 .segment{display:inline-flex;flex-direction:column;align-items:flex-start;vertical-align:bottom;white-space:pre;min-width:0}
 .chordcell{display:flex;flex-direction:column;align-items:flex-start;min-height:62px;justify-content:flex-end}
 .chord{font-weight:800;color:#7144bb;font-size:13px;line-height:1.15;white-space:pre}
-.chorddiagram{display:block;width:47px;height:39px;overflow:visible;margin:1px 0 2px}
+.chorddiagram{display:block;width:47px;height:39px;overflow:visible;margin:1px 0 2px;flex:none}
 .lyric{font-size:15px;line-height:1.4;white-space:pre}
 .sheet.compact .lyric{font-size:13.5px}
 .sheet.compact .sheetline{line-height:1.35;margin-bottom:3px}
@@ -110,6 +113,31 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
   <input id="songTitleInput" placeholder="例：チェリー">
   <label for="artistInput">アーティスト（任意）</label>
   <input id="artistInput" placeholder="例：スピッツ">
+
+  <label for="capoInput">カポ（フレット数）</label>
+  <select id="capoInput">
+   <option value="0">カポなし</option>
+   <option value="1">カポ 1</option>
+   <option value="2">カポ 2</option>
+   <option value="3">カポ 3</option>
+   <option value="4">カポ 4</option>
+   <option value="5">カポ 5</option>
+   <option value="6">カポ 6</option>
+   <option value="7">カポ 7</option>
+   <option value="8">カポ 8</option>
+   <option value="9">カポ 9</option>
+   <option value="10">カポ 10</option>
+   <option value="11">カポ 11</option>
+   <option value="12">カポ 12</option>
+  </select>
+
+  <label for="tuningInput">チューニング</label>
+  <select id="tuningInput">
+   <option value="standard">標準チューニング</option>
+   <option value="down1">半音下げ</option>
+  </select>
+  <p class="hint">ここで選んだ設定は、演奏画面の曲名の下に表示されます。</p>
+
   <label for="editorText">歌詞</label>
   <textarea id="editorText" spellcheck="false" placeholder="ここに歌詞を入力してね。&#10;例：君を忘れない&#10;曲がりくねった道を行く"></textarea>
   <p class="hint">①歌詞を入力 → ②下のプレビューでコードを付けたい文字をタップ → ③コードを選ぶ。コードは選んだ文字の位置に付きます。コードを付けた文字をもう一度タップすると変更できます。</p>
@@ -147,6 +175,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
    </label>
   </div>
   <h2 id="sheetTitle"></h2>
+  <div id="songSettingsDisplay" class="song-settings"></div>
   <div id="scrollArea"><div id="sheetContent" class="sheet compact"></div></div>
   <div class="scrolltools no-print">
    <button id="scrollStartBtn">▶ 自動スクロール</button>
@@ -197,10 +226,13 @@ function renderList(){
   row.append(info,open,edit);$('songList').append(row);
  });
 }
+
 function newSong(){
  editingId=null;
  $('songTitleInput').value='';
  $('artistInput').value='';
+ $('capoInput').value='0';
+ $('tuningInput').value='standard';
  $('editorText').value='';
  $('deleteSongBtn').classList.add('hidden');
  hidePicker();renderEditorPreview();show('editView');
@@ -210,6 +242,8 @@ function editSong(id){
  editingId=id;
  $('songTitleInput').value=s.title||'';
  $('artistInput').value=s.artist||'';
+ $('capoInput').value=String(Number(s.capo)||0);
+ $('tuningInput').value=s.tuning==='down1'?'down1':'standard';
  $('editorText').value=s.body||'';
  $('deleteSongBtn').classList.remove('hidden');
  hidePicker();renderEditorPreview();show('editView');
@@ -217,7 +251,15 @@ function editSong(id){
 function saveSong(){
  const title=$('songTitleInput').value.trim();
  if(!title){alert('曲名を入力してね。');$('songTitleInput').focus();return}
- const song={id:editingId||uid(),title,artist:$('artistInput').value.trim(),body:$('editorText').value,updatedAt:new Date().toISOString()};
+ const song={
+  id:editingId||uid(),
+  title,
+  artist:$('artistInput').value.trim(),
+  capo:Number($('capoInput').value)||0,
+  tuning:$('tuningInput').value==='down1'?'down1':'standard',
+  body:$('editorText').value,
+  updatedAt:new Date().toISOString()
+ };
  const i=songs.findIndex(x=>x.id===song.id);
  if(i>=0)songs[i]=song;else songs.push(song);
  saveSongs();renderList();currentId=song.id;openSong(song.id);
@@ -254,28 +296,25 @@ function diagramSvg(name){
  const base=min>4?min-1:0;
  const left=10,top=4,fretW=6.2,stringH=5.7,width=45,height=39;
 
- // 配列は6弦から1弦の順。6弦を下（手前）、1弦を上（奥）に配置
+ // 配列は6弦から1弦の順。6弦を下、1弦を上に配置
  const stringY=i=>top+3+(5-i)*stringH;
-
  let svg=`<svg class="chorddiagram" viewBox="0 0 ${width} ${height}" aria-label="${esc(name)} コード図" role="img">`;
 
- // 弦：6弦は太く、1弦は細く
+ // 弦はそれぞれ固定座標で描画。6弦を太く、1弦を細くする
  for(let i=0;i<6;i++){
   const y=stringY(i);
   const strokeWidth=[1.15,1.0,0.85,0.7,0.55,0.4][i];
   svg+=`<line x1="${left}" y1="${y}" x2="${left+fretW*4}" y2="${y}" stroke="#777" stroke-width="${strokeWidth}"/>`;
  }
 
- // フレット：左端はナット
+ // フレット。左端がナット
  for(let f=0;f<=4;f++){
   const x=left+f*fretW;
   const isNut=f===0&&base===0;
   svg+=`<line x1="${x}" y1="${top+3}" x2="${x}" y2="${top+3+5*stringH}" stroke="${isNut?'#222':'#999'}" stroke-width="${isNut?'2.2':'.65'}"/>`;
  }
 
- if(base>0){
-  svg+=`<text x="0" y="10" font-size="5" fill="#555">${base+1}F</text>`;
- }
+ if(base>0)svg+=`<text x="0" y="10" font-size="5" fill="#555">${base+1}F</text>`;
 
  const lowest=active.length?Math.min(...active):0;
  const lowIndices=fing.map((v,i)=>v===lowest&&v>0?i:-1).filter(i=>i>=0);
@@ -291,9 +330,11 @@ function diagramSvg(name){
  fing.forEach((v,i)=>{
   const y=stringY(i);
   if(v<0){
-   svg+=`<text x="1" y="${y+1.8}" font-size="5.5" fill="#333">×</text>`;
+   // ×を文字ではなく線で描くため、フォントや空白で位置がずれない
+   svg+=`<line x1="3.7" y1="${y-1.3}" x2="6.3" y2="${y+1.3}" stroke="#222" stroke-width=".8" stroke-linecap="round"/><line x1="6.3" y1="${y-1.3}" x2="3.7" y2="${y+1.3}" stroke="#222" stroke-width=".8" stroke-linecap="round"/>`;
   }else if(v===0){
-   svg+=`<circle cx="${left-4}" cy="${y}" r="1.5" fill="none" stroke="#333" stroke-width=".7"/>`;
+   // ○も同じ固定座標で描く
+   svg+=`<circle cx="5" cy="${y}" r="1.55" fill="white" stroke="#222" stroke-width=".75"/>`;
   }else if(!(barre&&v===barre.fret&&i>=barre.first&&i<=barre.last)){
    const x=left+(v-base-.5)*fretW;
    svg+=`<circle cx="${x}" cy="${y}" r="1.75" fill="#171717"/>`;
@@ -312,9 +353,9 @@ function renderEditorPreview(){
   const row=document.createElement('div');row.className='previewLine';
   const re=/\[[^\]]+\]|[\s\S]/g;let m,pending=null;
   while((m=re.exec(line))!==null){
-   const token=m[0],start=globalStart+m.index,end=start+token.length;
+   const token=m[0],start=globalStart+m.index;
    if(token.startsWith('[')&&token.endsWith(']')){
-    pending={code:token.slice(1,-1).trim(),start,end};continue;
+    pending={code:token.slice(1,-1).trim(),start,end:start+token.length};continue;
    }
    const ch=document.createElement('button');
    ch.type='button';ch.className='previewChar';ch.dataset.pos=start;
@@ -401,12 +442,26 @@ function makeSheet(body){
  });
  return container;
 }
+
 function openSong(id){
  const s=songs.find(x=>x.id===id);if(!s)return;currentId=id;
  $('sheetTitle').textContent=s.title+(s.artist?' — '+s.artist:'');
- $('sheetContent').innerHTML='';$('sheetContent').append(makeSheet(s.body));
- $('sheetContent').classList.toggle('compact',$('compactToggle').checked);show('playView');
+ const settings=$('songSettingsDisplay');settings.innerHTML='';
+ const capo=Number(s.capo)||0;
+ const capoPill=document.createElement('span');
+ capoPill.className='setting-pill';
+ capoPill.textContent=capo===0?'🎸 カポなし':'🎸 カポ '+capo+' フレット';
+ settings.append(capoPill);
+ const tuningPill=document.createElement('span');
+ tuningPill.className='setting-pill'+(s.tuning==='down1'?' down':'');
+ tuningPill.textContent=s.tuning==='down1'?'↘ 半音下げ':'♪ 標準チューニング';
+ settings.append(tuningPill);
+ $('sheetContent').innerHTML='';
+ $('sheetContent').append(makeSheet(s.body));
+ $('sheetContent').classList.toggle('compact',$('compactToggle').checked);
+ show('playView');
 }
+
 function startScroll(){
  stopScroll();const area=$('scrollArea'),speed=Number($('speedRange').value);
  scrollTimer=setInterval(()=>{area.scrollTop+=speed*.35;if(area.scrollTop+area.clientHeight>=area.scrollHeight-1)stopScroll()},50);
@@ -435,7 +490,15 @@ function restoreFile(file){
    const map=new Map(songs.map(s=>[s.id,s]));
    incoming.forEach(s=>{
     if(!s||typeof s!=='object')return;
-    const item={id:String(s.id||uid()),title:String(s.title||'（曲名なし）'),artist:String(s.artist||''),body:String(s.body||''),updatedAt:s.updatedAt||new Date().toISOString()};
+    const item={
+     id:String(s.id||uid()),
+     title:String(s.title||'（曲名なし）'),
+     artist:String(s.artist||''),
+     capo:Number(s.capo)||0,
+     tuning:s.tuning==='down1'?'down1':'standard',
+     body:String(s.body||''),
+     updatedAt:s.updatedAt||new Date().toISOString()
+    };
     map.set(item.id,item);
    });
    songs=[...map.values()];saveSongs();renderList();alert('復元が完了したよ。曲一覧を確認してね。');
