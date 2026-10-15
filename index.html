@@ -36,16 +36,19 @@ label{display:block;font-size:13px;font-weight:700;margin:12px 0 6px}
 .hidden{display:none!important}
 .sectiontitle{font-size:17px;margin:6px 0 10px}
 .topline{display:flex;align-items:center;justify-content:space-between;gap:8px}
-#sheetTitle{font-size:20px;margin:2px 0 12px}
+#sheetTitle{font-size:20px;margin:2px 0 8px}
+#sheetSettings{font-size:12px;color:var(--muted);margin:0 0 12px}
 .sheet{background:white;border:1px solid var(--line);border-radius:16px;padding:14px;overflow-wrap:anywhere}
-.sheetline{display:flex;flex-wrap:wrap;align-items:flex-end;line-height:1.6;min-height:1.6em;white-space:pre-wrap;margin:0 0 5px}
-.segment{display:inline-flex;flex:0 0 auto;flex-direction:column;align-items:flex-start;vertical-align:bottom;white-space:pre;min-width:0}
-.chordcell{display:flex;flex:0 0 47px;width:47px;min-width:47px;flex-direction:column;align-items:flex-start;min-height:62px;justify-content:flex-end}
-.chord{font-weight:800;color:#7144bb;font-size:13px;line-height:1.15;white-space:pre}
-.chorddiagram{display:block;flex:0 0 47px;width:47px;min-width:47px;height:39px;overflow:visible;margin:1px 0 2px}
-.lyric{font-size:15px;line-height:1.4;white-space:pre}
-.sheet.compact .lyric{font-size:13.5px}
-.sheet.compact .sheetline{line-height:1.35;margin-bottom:3px}
+.sheetline{display:flex;flex-direction:column;align-items:flex-start;line-height:1.6;margin:0 0 7px}
+.sheetlinecontent{display:flex;align-items:flex-start;white-space:pre;min-height:1.6em}
+.sheetunit{display:inline-flex;flex-direction:column;align-items:center;justify-content:flex-end;flex:0 0 auto;min-width:0;vertical-align:bottom}
+.sheetunit-top{display:flex;align-items:flex-end;justify-content:center;width:1em;height:40px;overflow:visible;position:relative}
+.sheetunit-top.hasdiagram{width:45px}
+.sheetchord{display:block;height:18px;min-width:1em;text-align:center;font-weight:800;color:var(--purple);font-size:13px;line-height:18px;white-space:nowrap}
+.sheetdiagram{display:block;width:45px;height:39px;overflow:visible;margin:0 0 1px}
+.sheetlyric{font-size:15px;line-height:1.4;white-space:pre}
+.sheet.compact .sheetlyric{font-size:13.5px}
+.sheet.compact .sheetline{line-height:1.35;margin-bottom:4px}
 #scrollArea{max-height:62vh;overflow:auto;scroll-behavior:smooth}
 .scrolltools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0}
 .scrolltools input[type=range]{width:120px;padding:0}
@@ -62,40 +65,40 @@ button.previewChar.selected{background:#e8dcff;outline:1px solid #b79beb}
 .palette{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
 .palette button{min-width:48px;padding:10px 9px}
 .palette button.chosen{background:#38205a;outline:2px solid #bca5e7}
-.capoRow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.capoRow select{width:auto;min-width:100px}
-.sectionEditor{border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0;background:#fdfbff}
-.sectionFields{display:grid;grid-template-columns:1fr;gap:8px}
-.sectionFields label{margin:3px 0}
-.sectionFields input{margin-top:5px}
-.sectionBlock{margin:0 0 14px;padding:10px 8px;border:1px solid #e4dced;border-radius:10px;break-inside:avoid}
-.sectionHeading{font-size:15px;font-weight:800;color:#59349e;margin:0 0 9px}
-.sectionChords{display:flex;flex-wrap:wrap;align-items:flex-start;gap:8px}
-.sectionGroup{display:flex;align-items:flex-start;gap:5px;padding:4px 5px;border-radius:7px;background:#faf8fe}
-.sectionGroup .chordcell{min-height:55px}
-.sectionGroup .chorddiagram{width:43px;min-width:43px;flex-basis:43px}
-.sectionGroup .chord{font-size:14px}
-.sectionSlash{font-weight:700;color:#8b6ad0;padding-top:5px}
-#capoDisplay{font-size:13px;font-weight:700;color:#59349e;margin:0 0 10px}
+
+/* イントロ・間奏などのコード進行は、歌詞より少し小さく表示 */
+.progress-section{margin:9px 0 12px;padding:8px 10px;background:#f8f5fd;border:1px solid #e7def4;border-radius:10px}
+.progress-title{font-size:12px;font-weight:800;color:#5d3b98;margin-bottom:5px}
+.progress-chords{display:flex;flex-wrap:wrap;align-items:center;gap:5px}
+.progress-chord{font-size:12px;font-weight:750;color:#65439d;background:#eee7fa;border-radius:6px;padding:3px 6px}
+.progress-separator{font-size:11px;color:#8a7b9f}
+.progress-note{font-size:11px;color:var(--muted);margin-top:4px}
+
 footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
+@media(max-width:420px){
+ main{padding:10px 8px 30px}
+ .card{padding:11px}
+ .sheet{padding:9px}
+ .sheetdiagram{width:42px}
+ .sheetunit-top.hasdiagram{width:42px}
+}
 @media print{
  body{background:white!important;color:#000!important}
  header,.no-print,#homeView,#editView,footer{display:none!important}
  main{max-width:none;margin:0;padding:0}
  .card,.sheet{border:0;box-shadow:none;padding:0;margin:0;border-radius:0}
  #playView{display:block!important}
- .print-only{display:block!important}
  #scrollArea{max-height:none;overflow:visible}
  #sheetTitle{font-size:16pt;margin:0 0 5pt}
- #capoDisplay{color:#000;margin-bottom:8pt}
+ #sheetSettings{font-size:9pt;margin-bottom:8pt}
  .sheetline{break-inside:avoid;margin-bottom:3pt}
- .chord{color:#000}
- .lyric{font-size:10pt}
- .sheet.compact .lyric{font-size:9pt}
- .sectionBlock{border:1px solid #bbb;margin-bottom:10pt;padding:7pt}
- .sectionHeading{color:#000}
- .sectionGroup{background:transparent}
- .sectionSlash{color:#000}
+ .sheetchord{color:#000}
+ .sheetlyric{font-size:10pt}
+ .sheet.compact .sheetlyric{font-size:9pt}
+ .progress-section{break-inside:avoid;background:white;border-color:#ccc;padding:5pt;margin:5pt 0}
+ .progress-title{color:#000;font-size:9pt}
+ .progress-chord{background:white;border:1px solid #bbb;color:#000;font-size:8pt}
+ .progress-separator{color:#333}
  @page{size:A4;margin:12mm}
 }
 </style>
@@ -130,47 +133,65 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
  </div>
  <div class="card">
   <h2 class="sectiontitle">曲の登録・編集</h2>
-  <label for="songTitleInput">曲名</label><input id="songTitleInput" placeholder="例：チェリー">
-  <label for="artistInput">アーティスト（任意）</label><input id="artistInput" placeholder="例：スピッツ">
-  <label for="capoInput">カポの位置</label>
-  <div class="capoRow">
-   <select id="capoInput">
-    <option value="0">カポなし</option>
-    <option value="1">1フレット</option>
-    <option value="2">2フレット</option>
-    <option value="3">3フレット</option>
-    <option value="4">4フレット</option>
-    <option value="5">5フレット</option>
-    <option value="6">6フレット</option>
-    <option value="7">7フレット</option>
-    <option value="8">8フレット</option>
-    <option value="9">9フレット</option>
-    <option value="10">10フレット</option>
-    <option value="11">11フレット</option>
-    <option value="12">12フレット</option>
-   </select>
-   <span class="hint">曲ごとに設定できます。</span>
-  </div>
+  <label for="songTitleInput">曲名</label>
+  <input id="songTitleInput" placeholder="例：チェリー">
+  <label for="artistInput">アーティスト（任意）</label>
+  <input id="artistInput" placeholder="例：スピッツ">
+
+  <label for="capoInput">カポ設定</label>
+  <select id="capoInput">
+   <option value="0">カポなし</option>
+   <option value="1">カポ1</option>
+   <option value="2">カポ2</option>
+   <option value="3">カポ3</option>
+   <option value="4">カポ4</option>
+   <option value="5">カポ5</option>
+   <option value="6">カポ6</option>
+   <option value="7">カポ7</option>
+   <option value="8">カポ8</option>
+   <option value="9">カポ9</option>
+   <option value="10">カポ10</option>
+   <option value="11">カポ11</option>
+   <option value="12">カポ12</option>
+  </select>
+
+  <label for="tuningInput">チューニング</label>
+  <select id="tuningInput">
+   <option value="standard">標準チューニング</option>
+   <option value="down1">半音下げ</option>
+  </select>
+  <p class="hint">カポ位置とチューニングは曲ごとに保存されます。「半音下げ」はギター全体を通常より半音低く合わせる設定です。</p>
+
   <label for="editorText">歌詞</label>
   <textarea id="editorText" spellcheck="false" placeholder="ここに歌詞を入力してね。
 例：君を忘れない
 曲がりくねった道を行く"></textarea>
-  <p class="hint">①歌詞を入力 → ②下のプレビューでコードを付けたい文字をタップ → ③コードを選ぶ。コードは選んだ文字の位置に付きます。コードを付けた文字をもう一度タップすると変更できます。</p>
-  <div class="topline"><h3 class="sectiontitle">歌詞プレビュー</h3><button id="refreshPreviewBtn" class="smallbtn secondary">更新</button></div>
+  <p class="hint">①歌詞を入力 → ②下のプレビューでコードを付けたい文字をタップ → ③コードを選ぶ。コードは選んだ文字の真上に付きます。コードを付けた文字をもう一度タップすると変更できます。</p>
+
+  <div class="topline">
+   <h3 class="sectiontitle">歌詞プレビュー</h3>
+   <button id="refreshPreviewBtn" class="smallbtn secondary">更新</button>
+  </div>
   <div id="lyricPreview"></div>
+
+  <div class="card" style="margin:10px 0 0;padding:12px">
+   <h3 class="sectiontitle">イントロ・間奏・アウトロなど</h3>
+   <p class="hint">コード進行を登録するときは、下の形式で1行ずつ入力します。歌詞の入力欄とは別なので、歌詞やコードの位置には影響しません。</p>
+   <p class="hint">例：<br>【イントロ】 G / C / D / F<br>【間奏】 G C / D / F G<br>【アウトロ】 C / G</p>
+   <label for="progressText">コード進行</label>
+   <textarea id="progressText" rows="4" spellcheck="false" placeholder="【イントロ】 G / C / D / F
+【間奏】 G C / D / F G
+【アウトロ】 C / G"></textarea>
+  </div>
+
   <div id="chordPicker" class="card hidden" style="margin:10px 0 0;padding:12px">
-   <div class="topline"><strong id="pickerTitle">コードを選択</strong><button id="removeChordBtn" class="smallbtn ghost">コードを外す</button></div>
+   <div class="topline">
+    <strong id="pickerTitle">コードを選択</strong>
+    <button id="removeChordBtn" class="smallbtn ghost">コードを外す</button>
+   </div>
    <div id="chordPalette" class="palette"></div>
    <p class="hint">Fなどのセーハコードは、演奏画面で黒い棒として表示されます。</p>
   </div>
-
-  <hr style="border:0;border-top:1px solid var(--line);margin:20px 0">
-  <div class="topline">
-   <h3 class="sectiontitle">イントロ・間奏など</h3>
-   <button id="addSectionBtn" class="smallbtn">＋ 区切りを追加</button>
-  </div>
-  <p class="hint">歌詞のない部分のコードを登録できます。例：G/C/D/F または GC/D/FG。スラッシュ「/」でまとまりを分け、同じまとまりのコードは続けて入力します。コードの並びは演奏画面と印刷にも表示されます。</p>
-  <div id="sectionEditorList"></div>
 
   <div class="toolbar" style="margin-top:14px">
    <button id="saveSongBtn2">保存する</button>
@@ -191,7 +212,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
    <label style="display:flex;align-items:center;gap:6px;margin:0;font-weight:500"><input id="compactToggle" type="checkbox" checked style="width:auto"> コンパクト表示</label>
   </div>
   <h2 id="sheetTitle"></h2>
-  <div id="capoDisplay"></div>
+  <div id="sheetSettings"></div>
   <div id="scrollArea"><div id="sheetContent" class="sheet compact"></div></div>
   <div class="scrolltools no-print">
    <button id="scrollStartBtn">▶ 自動スクロール</button>
@@ -226,46 +247,69 @@ function show(view){
 function esc(s){
  return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
-
+function getProgress(song){
+ return String(song.progress||'');
+}
+function getCapo(song){
+ const n=Number(song.capo||0);
+ return Number.isFinite(n)?Math.max(0,Math.min(12,n)):0;
+}
+function tuningLabel(song){
+ return song.tuning==='down1'?'半音下げ':'標準チューニング';
+}
+function settingsLabel(song){
+ const capo=getCapo(song);
+ return (capo===0?'カポなし':'カポ'+capo)+' ・ '+tuningLabel(song);
+}
 function renderList(){
  $('songList').innerHTML='';
  $('songCount').textContent=songs.length+'曲';
  $('emptyState').classList.toggle('hidden',songs.length>0);
  [...songs].sort((a,b)=>(a.title||'').localeCompare(b.title||'','ja')).forEach(song=>{
-  const row=document.createElement('div');row.className='songrow';
-  const info=document.createElement('div');info.className='songtitle';
-  info.innerHTML=esc(song.title||'（曲名なし）')+'<div class="songmeta">'+esc(song.artist||'')+'</div>';
-  const open=document.createElement('button');open.className='smallbtn';open.textContent='開く';open.onclick=()=>openSong(song.id);
-  const edit=document.createElement('button');edit.className='smallbtn secondary';edit.textContent='編集';edit.onclick=()=>editSong(song.id);
-  row.append(info,open,edit);$('songList').append(row);
+  const row=document.createElement('div');
+  row.className='songrow';
+  const info=document.createElement('div');
+  info.className='songtitle';
+  info.innerHTML=esc(song.title||'（曲名なし）')+'<div class="songmeta">'+esc(song.artist||'')+'<br>'+esc(settingsLabel(song))+'</div>';
+  const open=document.createElement('button');
+  open.className='smallbtn';
+  open.textContent='開く';
+  open.onclick=()=>openSong(song.id);
+  const edit=document.createElement('button');
+  edit.className='smallbtn secondary';
+  edit.textContent='編集';
+  edit.onclick=()=>editSong(song.id);
+  row.append(info,open,edit);
+  $('songList').append(row);
  });
 }
 function newSong(){
  editingId=null;
  $('songTitleInput').value='';
  $('artistInput').value='';
- $('capoInput').value='0';
  $('editorText').value='';
+ $('progressText').value='';
+ $('capoInput').value='0';
+ $('tuningInput').value='standard';
  $('deleteSongBtn').classList.add('hidden');
- $('sectionEditorList').innerHTML='';
- hidePicker();renderEditorPreview();show('editView');
+ hidePicker();
+ renderEditorPreview();
+ show('editView');
 }
 function editSong(id){
- const s=songs.find(x=>x.id===id);if(!s)return;
+ const s=songs.find(x=>x.id===id);
+ if(!s)return;
  editingId=id;
  $('songTitleInput').value=s.title||'';
  $('artistInput').value=s.artist||'';
- $('capoInput').value=String(Number(s.capo)||0);
  $('editorText').value=s.body||'';
+ $('progressText').value=getProgress(s);
+ $('capoInput').value=String(getCapo(s));
+ $('tuningInput').value=s.tuning==='down1'?'down1':'standard';
  $('deleteSongBtn').classList.remove('hidden');
- renderSectionEditors(Array.isArray(s.sections)?s.sections:[]);
- hidePicker();renderEditorPreview();show('editView');
-}
-function readSectionEditors(){
- return [...$('sectionEditorList').querySelectorAll('.sectionEditor')].map(el=>({
-  title:el.querySelector('.sectionName').value.trim()||'セクション',
-  chords:el.querySelector('.sectionChordsInput').value.trim()
- }));
+ hidePicker();
+ renderEditorPreview();
+ show('editView');
 }
 function saveSong(){
  const title=$('songTitleInput').value.trim();
@@ -277,21 +321,28 @@ function saveSong(){
   title,
   artist:$('artistInput').value.trim(),
   body:$('editorText').value,
+  progress:$('progressText').value,
   capo:Number($('capoInput').value)||0,
-  sections:readSectionEditors(),
+  tuning:$('tuningInput').value==='down1'?'down1':'standard',
   updatedAt:new Date().toISOString()
  };
  const i=songs.findIndex(x=>x.id===song.id);
  if(i>=0)songs[i]=song;else songs.push(song);
- saveSongs();renderList();currentId=song.id;openSong(song.id);
+ saveSongs();
+ renderList();
+ currentId=song.id;
+ openSong(song.id);
 }
 function deleteSong(){
  if(!editingId)return;
  if(!confirm('この曲を削除する？バックアップがあるか確認してね。'))return;
- songs=songs.filter(x=>x.id!==editingId);saveSongs();renderList();show('homeView');
+ songs=songs.filter(x=>x.id!==editingId);
+ saveSongs();
+ renderList();
+ show('homeView');
 }
 
-/* コードは6弦から1弦の順。-1=ミュート、0=開放弦、正数=フレット番号 */
+/* コードは6弦から1弦。-1=ミュート、0=開放弦、正数=フレット */
 const CHORDS={
 'C':[-1,3,2,0,1,0],'Cm':[-1,3,5,5,4,3],'C7':[-1,3,2,3,1,0],'Cmaj7':[-1,3,2,0,0,0],'Cadd9':[-1,3,2,0,3,0],
 'D':[-1,-1,0,2,3,2],'Dm':[-1,-1,0,2,3,1],'D7':[-1,-1,0,2,1,2],'Dsus4':[-1,-1,0,2,3,3],'Dmaj7':[-1,-1,0,2,2,2],
@@ -309,67 +360,110 @@ const CHORDS={
 'Fmaj7/C':[-1,3,3,2,1,0],'C/E':[0,3,2,0,1,0]
 };
 
-/* 横向きコード図：左がナット、上が6弦、下が1弦 */
+/*
+ 横向コード図：
+ 左端が太いナット。
+ 今回の指定どおり、上が1弦（高音）、下が6弦（低音）。
+ 配列自体は6弦から1弦なので、描画時のY座標だけ逆順にする。
+*/
 function diagramSvg(name){
  const fing=CHORDS[name];
  if(!fing)return '';
  const active=fing.filter(v=>v>0);
  const min=active.length?Math.min(...active):1;
  const base=min>4?min-1:0;
- const left=10,top=4,fretW=6.2,stringH=5.7,width=45,height=39;
- const stringY=i=>top+3+i*stringH;
- let svg=`<svg class="chorddiagram" viewBox="0 0 ${width} ${height}" aria-label="${esc(name)} コード図" role="img">`;
+ const xNut=11,top=5,fretW=6.1,stringGap=5.7,width=45,height=39;
+ const yString=i=>top+(5-i)*stringGap;
+ let svg=`<svg class="sheetdiagram" viewBox="0 0 ${width} ${height}" aria-label="${esc(name)} コード図" role="img">`;
+
+ /* 弦 */
  for(let i=0;i<6;i++){
-  const y=stringY(i);
-  const strokeWidth=[1.15,1.0,0.85,0.7,0.55,0.4][i];
-  svg+=`<line x1="${left}" y1="${y}" x2="${left+fretW*4}" y2="${y}" stroke="#777" stroke-width="${strokeWidth}"/>`;
+  const y=yString(i);
+  const sw=[1.1,1,.85,.7,.55,.4][i];
+  svg+=`<line x1="${xNut}" y1="${y}" x2="${xNut+fretW*4}" y2="${y}" stroke="#777" stroke-width="${sw}"/>`;
  }
+
+ /* フレットとナット */
  for(let f=0;f<=4;f++){
-  const x=left+f*fretW;
+  const x=xNut+f*fretW;
   const isNut=f===0&&base===0;
-  svg+=`<line x1="${x}" y1="${top+3}" x2="${x}" y2="${top+3+5*stringH}" stroke="${isNut?'#111':'#999'}" stroke-width="${isNut?'2.5':'.65'}"/>`;
+  svg+=`<line x1="${x}" y1="${top-2}" x2="${x}" y2="${top+5*stringGap+2}" stroke="${isNut?'#222':'#999'}" stroke-width="${isNut?'2.2':'.65'}"/>`;
  }
- if(base>0)svg+=`<text x="0" y="10" font-size="5" fill="#555">${base+1}F</text>`;
+ if(base>0)svg+=`<text x="0" y="4.5" font-size="4.5" fill="#555">${base+1}F</text>`;
+
+ /* セーハ判定 */
  const lowest=active.length?Math.min(...active):0;
  const lowIndices=fing.map((v,i)=>v===lowest&&v>0?i:-1).filter(i=>i>=0);
  let barre=null;
  if(lowIndices.length>=2&&lowIndices[lowIndices.length-1]-lowIndices[0]>=3){
   barre={fret:lowest,first:lowIndices[0],last:lowIndices[lowIndices.length-1]};
-  const x=left+(lowest-base-.5)*fretW;
-  const y1=stringY(barre.first),y2=stringY(barre.last);
-  svg+=`<rect x="${x-1.8}" y="${Math.min(y1,y2)-1.8}" width="3.6" height="${Math.abs(y2-y1)+3.6}" rx="1.8" fill="#171717"/>`;
  }
+
+ /*
+  セーハ棒は該当フレットの中央に配置。
+  ナットと重ならないよう、棒の幅を細くし、ナットから離す。
+ */
+ if(barre){
+  const x=xNut+(barre.fret-base-.5)*fretW;
+  const y1=yString(barre.first);
+  const y2=yString(barre.last);
+  const barWidth=2.5;
+  svg+=`<rect x="${x-barWidth/2}" y="${Math.min(y1,y2)-1.4}" width="${barWidth}" height="${Math.abs(y2-y1)+2.8}" rx="1.2" fill="#171717"/>`;
+ }
+
+ /* 指位置、開放弦、ミュート */
  fing.forEach((v,i)=>{
-  const y=stringY(i);
-  if(v<0)svg+=`<text x="1" y="${y+1.8}" font-size="5.5" fill="#333">×</text>`;
-  else if(v===0)svg+=`<circle cx="${left-4}" cy="${y}" r="1.5" fill="none" stroke="#333" stroke-width=".7"/>`;
-  else if(!(barre&&v===barre.fret&&i>=barre.first&&i<=barre.last)){
-   const x=left+(v-base-.5)*fretW;
-   svg+=`<circle cx="${x}" cy="${y}" r="1.75" fill="#171717"/>`;
+  const y=yString(i);
+  if(v<0){
+   svg+=`<text x="${xNut-4.1}" y="${y+1.8}" text-anchor="middle" font-size="5.5" fill="#222">×</text>`;
+  }else if(v===0){
+   svg+=`<circle cx="${xNut-3.7}" cy="${y}" r="1.45" fill="none" stroke="#222" stroke-width=".7"/>`;
+  }else if(!(barre&&v===barre.fret&&i>=barre.first&&i<=barre.last)){
+   const x=xNut+(v-base-.5)*fretW;
+   if(x>=xNut+1&&x<=xNut+fretW*4){
+    svg+=`<circle cx="${x}" cy="${y}" r="1.8" fill="#171717"/>`;
+   }
   }
  });
  return svg+'</svg>';
 }
 
 function renderEditorPreview(){
- const area=$('lyricPreview');area.innerHTML='';
+ const area=$('lyricPreview');
+ area.innerHTML='';
  const body=$('editorText').value;
- if(!body){area.innerHTML='<span class="hint">ここに歌詞が表示されるよ。歌詞を入力してね。</span>';return}
+ if(!body){
+  area.innerHTML='<span class="hint">ここに歌詞が表示されるよ。歌詞を入力してね。</span>';
+  return;
+ }
  let globalStart=0;
  body.split('\n').forEach(line=>{
-  const row=document.createElement('div');row.className='previewLine';
-  const re=/\[[^\]]+\]|[\s\S]/g;let m,pending=null;
+  const row=document.createElement('div');
+  row.className='previewLine';
+  const re=/\[[^\]]+\]|[\s\S]/g;
+  let m,pending=null;
   while((m=re.exec(line))!==null){
    const token=m[0],start=globalStart+m.index,end=start+token.length;
    if(token.startsWith('[')&&token.endsWith(']')){
-    pending={code:token.slice(1,-1).trim(),start,end};continue;
+    pending={code:token.slice(1,-1).trim(),start,end};
+    continue;
    }
    const ch=document.createElement('button');
-   ch.type='button';ch.className='previewChar';ch.dataset.pos=start;
+   ch.type='button';
+   ch.className='previewChar';
+   ch.dataset.pos=start;
    ch.setAttribute('aria-label','「'+token+'」にコードを付ける');
-   if(pending){ch.dataset.markerStart=pending.start;ch.dataset.markerEnd=pending.end;ch.dataset.code=pending.code}
-   const top=document.createElement('span');top.className='previewChord';top.textContent=pending?pending.code:'\u00a0';
-   const lyric=document.createElement('span');lyric.className='previewLyric';lyric.textContent=token;
+   if(pending){
+    ch.dataset.markerStart=pending.start;
+    ch.dataset.markerEnd=pending.end;
+    ch.dataset.code=pending.code;
+   }
+   const top=document.createElement('span');
+   top.className='previewChord';
+   top.textContent=pending?pending.code:'\u00a0';
+   const lyric=document.createElement('span');
+   lyric.className='previewLyric';
+   lyric.textContent=token;
    ch.append(top,lyric);
    ch.addEventListener('click',()=>{
     pendingPos=Number(ch.dataset.pos);
@@ -381,22 +475,32 @@ function renderEditorPreview(){
     updatePaletteSelection(ch.dataset.code||'');
     $('chordPicker').scrollIntoView({behavior:'smooth',block:'nearest'});
    });
-   row.append(ch);pending=null;
+   row.append(ch);
+   pending=null;
   }
-  area.append(row);globalStart+=line.length+1;
+  area.append(row);
+  globalStart+=line.length+1;
  });
 }
-
 function updatePaletteSelection(code){
  document.querySelectorAll('#chordPalette button').forEach(b=>b.classList.toggle('chosen',b.dataset.chord===code));
 }
-function hidePicker(){$('chordPicker').classList.add('hidden');pendingPos=null;pendingMarker=null}
+function hidePicker(){
+ $('chordPicker').classList.add('hidden');
+ pendingPos=null;
+ pendingMarker=null;
+}
 function applyChord(name){
  if(pendingPos===null)return;
- const text=$('editorText').value,marker='['+name+']';
- if(pendingMarker)$('editorText').value=text.slice(0,pendingMarker.start)+marker+text.slice(pendingMarker.end);
- else $('editorText').value=text.slice(0,pendingPos)+marker+text.slice(pendingPos);
- hidePicker();renderEditorPreview();
+ const text=$('editorText').value;
+ const marker='['+name+']';
+ if(pendingMarker){
+  $('editorText').value=text.slice(0,pendingMarker.start)+marker+text.slice(pendingMarker.end);
+ }else{
+  $('editorText').value=text.slice(0,pendingPos)+marker+text.slice(pendingPos);
+ }
+ hidePicker();
+ renderEditorPreview();
 }
 function removeChord(){
  if(pendingPos===null)return;
@@ -404,142 +508,151 @@ function removeChord(){
   const text=$('editorText').value;
   $('editorText').value=text.slice(0,pendingMarker.start)+text.slice(pendingMarker.end);
  }
- hidePicker();renderEditorPreview();
+ hidePicker();
+ renderEditorPreview();
 }
 function buildPalette(){
- const palette=$('chordPalette');palette.innerHTML='';
+ const palette=$('chordPalette');
+ palette.innerHTML='';
  Object.keys(CHORDS).sort((a,b)=>a.localeCompare(b,'en')).forEach(name=>{
-  const b=document.createElement('button');b.type='button';b.textContent=name;b.dataset.chord=name;b.onclick=()=>applyChord(name);palette.append(b);
+  const b=document.createElement('button');
+  b.type='button';
+  b.textContent=name;
+  b.dataset.chord=name;
+  b.onclick=()=>applyChord(name);
+  palette.append(b);
  });
 }
 
-/* セクションの入力欄 */
-function renderSectionEditors(sections){
- const list=$('sectionEditorList');list.innerHTML='';
- (sections||[]).forEach(section=>addSectionEditor(section.title,section.chords,false));
-}
-function addSectionEditor(title='',chords='',focus=true){
- const box=document.createElement('div');box.className='sectionEditor';
- const fields=document.createElement('div');fields.className='sectionFields';
- const titleLabel=document.createElement('label');titleLabel.textContent='区切りの名前';
- const titleInput=document.createElement('input');titleInput.className='sectionName';titleInput.placeholder='例：イントロ、間奏、アウトロ';titleInput.value=title||'';
- titleLabel.append(titleInput);
- const chordsLabel=document.createElement('label');chordsLabel.textContent='コードの並び';
- const chordsInput=document.createElement('input');chordsInput.className='sectionChordsInput';chordsInput.placeholder='例：G/C/D/F または GC/D/FG';chordsInput.value=chords||'';
- chordsLabel.append(chordsInput);
- fields.append(titleLabel,chordsLabel);
- const actions=document.createElement('div');actions.className='toolbar';actions.style.margin='10px 0 0';
- const remove=document.createElement('button');remove.type='button';remove.className='smallbtn danger';remove.textContent='この区切りを削除';
- remove.onclick=()=>box.remove();
- actions.append(remove);box.append(fields,actions);$('sectionEditorList').append(box);
- if(focus)titleInput.focus();
-}
-function parseChordGroup(raw){
- const value=String(raw||'').replace(/\s+/g,'');
- if(!value)return [];
- if(CHORDS[value])return [value];
- const names=Object.keys(CHORDS).sort((a,b)=>b.length-a.length);
- const result=[];let remaining=value;
- while(remaining){
-  const found=names.find(name=>remaining.startsWith(name));
-  if(!found)return [{name:raw,unknown:true}];
-  result.push(found);remaining=remaining.slice(found.length);
- }
- return result;
-}
-function sectionGroups(text){
- return String(text||'').split('/').map(part=>part.trim()).filter(Boolean).map(parseChordGroup);
-}
-function makeChordCell(name){
- const cell=document.createElement('span');cell.className='chordcell';
- const label=document.createElement('span');label.className='chord';label.textContent=name;cell.append(label);
- const svg=diagramSvg(name);
- if(svg){const holder=document.createElement('span');holder.innerHTML=svg;cell.append(holder.firstChild)}
- return cell;
-}
-function makeSectionBlock(section){
- const block=document.createElement('div');block.className='sectionBlock';
- const heading=document.createElement('h3');heading.className='sectionHeading';heading.textContent=section.title||'セクション';block.append(heading);
- const row=document.createElement('div');row.className='sectionChords';
- const groups=sectionGroups(section.chords);
- if(!groups.length){
-  const hint=document.createElement('span');hint.className='hint';hint.textContent='コード未登録';row.append(hint);
- }else{
-  groups.forEach((group,index)=>{
-   if(index){
-    const slash=document.createElement('span');slash.className='sectionSlash';slash.textContent='/';row.append(slash);
-   }
-   const groupBox=document.createElement('span');groupBox.className='sectionGroup';
-   group.forEach(chord=>{
-    if(chord&&chord.unknown){
-     const label=document.createElement('span');label.className='chord';label.textContent=chord.name;groupBox.append(label);
-    }else{
-     groupBox.append(makeChordCell(chord));
-    }
-   });
-   row.append(groupBox);
-  });
- }
- block.append(row);return block;
-}
-
-/* 歌詞行とコード図の描画 */
+/* 歌詞の文字位置を保ち、コード図は各文字の上に表示 */
 function makeSheet(body){
  const container=document.createElement('div');
  (body||'').replace(/\r/g,'').split('\n').forEach(line=>{
-  const row=document.createElement('div');row.className='sheetline';
-  const parts=line.split(/(\[[^\]]+\])/g);let pending='';
-  parts.forEach(part=>{
-   const m=part.match(/^\[([^\]]+)\]$/);
-   if(m){pending=m[1].trim();return}
-   if(part.length||pending){
-    const seg=document.createElement('span');seg.className='segment';
-    const cell=document.createElement('span');cell.className='chordcell';
-    if(pending){
-     const d=document.createElement('span');d.className='chord';d.textContent=pending;cell.append(d);
-     const svg=diagramSvg(pending);
-     if(svg){const holder=document.createElement('span');holder.innerHTML=svg;cell.append(holder.firstChild)}
-    }else{
-     const blank=document.createElement('span');blank.className='chord';blank.innerHTML='&nbsp;';cell.append(blank);
-    }
-    const lyric=document.createElement('span');lyric.className='lyric';lyric.textContent=part||' ';
-    seg.append(cell,lyric);row.append(seg);pending='';
+  const row=document.createElement('div');
+  row.className='sheetline';
+  const content=document.createElement('div');
+  content.className='sheetlinecontent';
+  const re=/\[[^\]]+\]|[\s\S]/g;
+  let m,pending='';
+  while((m=re.exec(line))!==null){
+   const token=m[0];
+   if(token.startsWith('[')&&token.endsWith(']')){
+    pending=token.slice(1,-1).trim();
+    row.classList.add('haschord');
+    continue;
    }
-  });
+   const unit=document.createElement('span');
+   unit.className='sheetunit';
+   const top=document.createElement('span');
+   top.className='sheetunit-top';
+   const diagram=diagramSvg(pending);
+   if(diagram){
+    top.classList.add('hasdiagram');
+    top.insertAdjacentHTML('beforeend',diagram);
+   }
+   const chord=document.createElement('span');
+   chord.className='sheetchord';
+   chord.textContent=pending||'\u00a0';
+   const lyric=document.createElement('span');
+   lyric.className='sheetlyric';
+   lyric.textContent=token;
+   unit.append(top,chord,lyric);
+   content.append(unit);
+   pending='';
+  }
   if(pending){
-   const seg=document.createElement('span');seg.className='segment';
-   const cell=document.createElement('span');cell.className='chordcell';
-   const d=document.createElement('span');d.className='chord';d.textContent=pending;cell.append(d);
-   const svg=diagramSvg(pending);
-   if(svg){const holder=document.createElement('span');holder.innerHTML=svg;cell.append(holder.firstChild)}
-   const lyric=document.createElement('span');lyric.className='lyric';lyric.textContent=' ';
-   seg.append(cell,lyric);row.append(seg);
+   const unit=document.createElement('span');
+   unit.className='sheetunit';
+   const top=document.createElement('span');
+   top.className='sheetunit-top hasdiagram';
+   const diagram=diagramSvg(pending);
+   if(diagram)top.insertAdjacentHTML('beforeend',diagram);
+   const chord=document.createElement('span');
+   chord.className='sheetchord';
+   chord.textContent=pending;
+   const lyric=document.createElement('span');
+   lyric.className='sheetlyric';
+   lyric.textContent=' ';
+   unit.append(top,chord,lyric);
+   content.append(unit);
   }
-  if(!row.children.length){
-   const seg=document.createElement('span');seg.className='segment';
-   seg.innerHTML='<span class="chordcell"><span class="chord">&nbsp;</span></span><span class="lyric">&nbsp;</span>';row.append(seg);
+  if(!content.children.length){
+   const blank=document.createElement('span');
+   blank.className='sheetlyric';
+   blank.textContent=' ';
+   content.append(blank);
   }
+  row.append(content);
   container.append(row);
  });
  return container;
 }
+
+/* 進行セクションの表示。例：【イントロ】 G / C / D / F */
+function makeProgress(body){
+ const container=document.createElement('div');
+ const lines=String(body||'').replace(/\r/g,'').split('\n');
+ lines.forEach(line=>{
+  const trimmed=line.trim();
+  if(!trimmed)return;
+  let title='コード進行',chordText=trimmed;
+  const match=trimmed.match(/^[【\[]([^】\]]+)[】\]]\s*(.*)$/);
+  if(match){
+   title=match[1].trim();
+   chordText=match[2].trim();
+  }
+  const section=document.createElement('div');
+  section.className='progress-section';
+  const heading=document.createElement('div');
+  heading.className='progress-title';
+  heading.textContent=title;
+  section.append(heading);
+  const row=document.createElement('div');
+  row.className='progress-chords';
+
+  /* スラッシュは小さな区切りとして扱い、コード名を順に表示 */
+  const tokens=chordText.split(/\s*(\/|｜|\|)\s*|\s+/).filter(Boolean);
+  tokens.forEach(token=>{
+   if(token==='/'||token==='|'||token==='｜'){
+    const sep=document.createElement('span');
+    sep.className='progress-separator';
+    sep.textContent='/';
+    row.append(sep);
+   }else{
+    const chord=document.createElement('span');
+    chord.className='progress-chord';
+    chord.textContent=token;
+    row.append(chord);
+   }
+  });
+  if(!chordText){
+   const empty=document.createElement('span');
+   empty.className='hint';
+   empty.textContent='コード進行なし';
+   row.append(empty);
+  }
+  section.append(row);
+  container.append(section);
+ });
+ return container;
+}
 function openSong(id){
- const s=songs.find(x=>x.id===id);if(!s)return;
+ const s=songs.find(x=>x.id===id);
+ if(!s)return;
  currentId=id;
  $('sheetTitle').textContent=s.title+(s.artist?' — '+s.artist:'');
- const capo=Number(s.capo)||0;
- $('capoDisplay').textContent=capo?'カポ '+capo+'フレット':'カポなし';
+ $('sheetSettings').textContent=settingsLabel(s);
  $('sheetContent').innerHTML='';
- (Array.isArray(s.sections)?s.sections:[]).forEach(section=>{
-  $('sheetContent').append(makeSectionBlock(section));
- });
+ const progress=getProgress(s);
+ if(progress.trim())$('sheetContent').append(makeProgress(progress));
  $('sheetContent').append(makeSheet(s.body));
  $('sheetContent').classList.toggle('compact',$('compactToggle').checked);
  show('playView');
 }
 function startScroll(){
  stopScroll();
- const area=$('scrollArea'),speed=Number($('speedRange').value);
+ const area=$('scrollArea');
+ const speed=Number($('speedRange').value);
  scrollTimer=setInterval(()=>{
   area.scrollTop+=speed*.35;
   if(area.scrollTop+area.clientHeight>=area.scrollHeight-1)stopScroll();
@@ -548,14 +661,20 @@ function startScroll(){
 }
 function stopScroll(){
  if(scrollTimer){clearInterval(scrollTimer);scrollTimer=null}
- const b=$('scrollStartBtn');if(b)b.textContent='▶ 自動スクロール';
+ const b=$('scrollStartBtn');
+ if(b)b.textContent='▶ 自動スクロール';
 }
 function backup(){
  const payload={app:'MySongs',version:2,createdAt:new Date().toISOString(),songs};
  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
- const url=URL.createObjectURL(blob),a=document.createElement('a');
- a.href=url;a.download='MySongs-backup-'+new Date().toISOString().slice(0,10)+'.json';
- document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement('a');
+ a.href=url;
+ a.download='MySongs-backup-'+new Date().toISOString().slice(0,10)+'.json';
+ document.body.append(a);
+ a.click();
+ a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
  alert('バックアップファイルを保存する操作を行ったよ。ダウンロード先を確認して、別の場所にも保管してね。');
 }
 function restoreFile(file){
@@ -563,7 +682,8 @@ function restoreFile(file){
  const reader=new FileReader();
  reader.onload=()=>{
   try{
-   const data=JSON.parse(reader.result),incoming=Array.isArray(data)?data:data.songs;
+   const data=JSON.parse(reader.result);
+   const incoming=Array.isArray(data)?data:data.songs;
    if(!Array.isArray(incoming))throw new Error('format');
    if(!confirm('バックアップから '+incoming.length+' 曲を読み込みます。今ある曲に追加・更新します（既存の曲は一括削除しません）。続ける？'))return;
    const map=new Map(songs.map(s=>[s.id,s]));
@@ -575,13 +695,17 @@ function restoreFile(file){
      title:String(s.title||'（曲名なし）'),
      artist:String(s.artist||''),
      body:String(s.body||''),
+     progress:String(s.progress||''),
      capo:Number(s.capo)||0,
-     sections:Array.isArray(s.sections)?s.sections:[],
+     tuning:s.tuning==='down1'?'down1':'standard',
      updatedAt:s.updatedAt||new Date().toISOString()
     };
     map.set(item.id,item);
    });
-   songs=[...map.values()];saveSongs();renderList();alert('復元が完了したよ。曲一覧を確認してね。');
+   songs=[...map.values()];
+   saveSongs();
+   renderList();
+   alert('復元が完了したよ。曲一覧を確認してね。');
   }catch(e){
    alert('バックアップファイルを読み込めなかったよ。MySongsで作成したJSONファイルを選んでね。');
   }
@@ -606,9 +730,14 @@ $('restoreFile').onchange=e=>{restoreFile(e.target.files[0]);e.target.value=''};
 $('editorText').addEventListener('input',()=>{hidePicker();renderEditorPreview()});
 $('refreshPreviewBtn').onclick=renderEditorPreview;
 $('removeChordBtn').onclick=removeChord;
-$('addSectionBtn').onclick=()=>addSectionEditor('','',true);
-buildPalette();loadSongs();renderList();
-if('serviceWorker' in navigator&&location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+
+buildPalette();
+loadSongs();
+renderList();
+
+if('serviceWorker' in navigator&&location.protocol.startsWith('http')){
+ window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+}
 </script>
 </body>
 </html>
