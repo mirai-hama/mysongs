@@ -77,20 +77,22 @@ label{display:block;font-size:13px;font-weight:700;margin:12px 0 6px}
 
 .sheet{
  background:white;border:1px solid var(--line);border-radius:16px;
- padding:14px;min-width:0
+ padding:14px;min-width:0;max-width:100%;overflow-wrap:anywhere
 }
 .sheetline{
- display:flex;flex-direction:column;align-items:flex-start;
- line-height:1.6;margin:0 0 7px;min-width:0
+ display:flex;flex-direction:column;align-items:stretch;
+ line-height:1.6;margin:0 0 7px;min-width:0;max-width:100%
 }
 .sheetlinecontent{
  display:flex;
  align-items:flex-start;
  flex-wrap:wrap;
- white-space:pre;
+ white-space:normal;
  min-height:1.6em;
+ width:100%;
  max-width:100%;
- min-width:0
+ min-width:0;
+ overflow-wrap:anywhere
 }
 .sheetunit{
  display:inline-flex;
@@ -99,43 +101,59 @@ label{display:block;font-size:13px;font-weight:700;margin:12px 0 6px}
  justify-content:flex-end;
  flex:0 0 auto;
  min-width:0;
+ max-width:100%;
  vertical-align:bottom
 }
 .sheetunit-top{
  display:flex;
- align-items:flex-end;
+ align-items:flex-start;
  justify-content:center;
  width:1em;
- height:40px;
+ height:35px;
  overflow:visible;
  position:relative
 }
-.sheetunit-top.hasdiagram{width:45px}
+.sheetunit-top.hasdiagram{width:39px}
 .sheetchord{
  display:block;
  height:18px;
  min-width:1em;
- max-width:none;
+ max-width:100%;
  text-align:center;
  font-weight:800;
  color:var(--purple);
- font-size:13px;
+ font-size:12px;
  line-height:18px;
- white-space:nowrap
+ white-space:nowrap;
+ overflow:visible
 }
 .sheetdiagram{
  display:block;
- width:45px;
- height:39px;
+ width:39px;
+ height:34px;
  overflow:hidden;
- margin:0 0 1px;
+ margin:0;
  flex:0 0 auto
 }
-.sheetlyric{font-size:15px;line-height:1.4;white-space:pre}
+.sheetlyric{
+ font-size:15px;
+ line-height:1.4;
+ white-space:pre;
+ max-width:100%
+}
 .sheet.compact .sheetlyric{font-size:13.5px}
 .sheet.compact .sheetline{line-height:1.35;margin-bottom:4px}
 
-#scrollArea{max-height:62vh;overflow:auto;scroll-behavior:smooth}
+/* 演奏画面は縦スクロールのみ */
+#scrollArea{
+ max-height:62vh;
+ overflow-x:hidden;
+ overflow-y:auto;
+ scroll-behavior:smooth;
+ min-width:0;
+ max-width:100%;
+ overscroll-behavior-x:none
+}
 .scrolltools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0}
 .scrolltools input[type=range]{width:120px;padding:0}
 #editorText{
@@ -147,9 +165,10 @@ label{display:block;font-size:13px;font-weight:700;margin:12px 0 6px}
  font-size:12px;line-height:1.6;color:#513b79
 }
 
-/* 歌詞プレビュー */
+/* 歌詞プレビュー：編集時は横方向にも確認できる */
 #lyricPreview{
  overflow-x:auto;
+ overflow-y:hidden;
  background:#fff;border:1px solid var(--line);
  border-radius:12px;padding:12px;min-height:60px;
  touch-action:pan-x pan-y;
@@ -211,14 +230,27 @@ button.previewChar.selected{background:#e8dcff;outline:1px solid #b79beb}
  pointer-events:none
 }
 
-/* コード選択 */
-.palette{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+/* コード選択表：B7などが端で欠けないようにグリッド表示 */
+.palette{
+ display:grid;
+ grid-template-columns:repeat(auto-fill,minmax(48px,1fr));
+ gap:7px;
+ margin-top:10px;
+ width:100%;
+ min-width:0;
+ overflow:visible
+}
 .palette button{
- min-width:48px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ width:100%;
+ min-width:0;
  max-width:100%;
- padding:10px 9px;
+ padding:10px 2px;
  white-space:nowrap;
- flex:0 0 auto
+ overflow:visible;
+ font-size:13px
 }
 .palette button.chosen{background:#38205a;outline:2px solid #bca5e7}
 
@@ -264,11 +296,16 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
 @media(max-width:420px){
  main{padding:10px 8px 30px}
  .card{padding:11px}
- .sheet{padding:9px}
- .sheetdiagram{width:42px;height:37px}
- .sheetunit-top.hasdiagram{width:42px}
- .sheetchord{font-size:12px}
+ .sheet{padding:8px}
+ .sheetdiagram{width:35px;height:31px}
+ .sheetunit-top.hasdiagram{width:35px}
+ .sheetunit-top{height:32px}
+ .sheetchord{font-size:11px}
+ .sheetlyric{font-size:14px}
+ .sheet.compact .sheetlyric{font-size:13px}
  .previewChord{font-size:11px}
+ .palette{grid-template-columns:repeat(auto-fill,minmax(45px,1fr));gap:6px}
+ .palette button{padding:10px 1px;font-size:12px}
 }
 
 @media print{
@@ -370,6 +407,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
 曲がりくねった道を行く"></textarea>
 
   <p class="hint">①歌詞を入力 → ②下のプレビューでコードを付けたい文字をタップ → ③コードを選ぶ。コードは選んだ文字の真上に付きます。コードを付けた文字をもう一度タップすると変更できます。</p>
+  <p class="hint">間奏を入れるときは、歌詞欄の入れたい場所に「【間奏】」だけを1行で入力してね。上下を1行ずつ空けると見やすくなります。</p>
 
   <div class="topline">
    <h3 class="sectiontitle">歌詞プレビュー</h3>
@@ -432,7 +470,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
    </label>
   </div>
 
-  <p class="hint no-print">画面を上下に動かして手動スクロールもできます。印刷画面ではA4向けのレイアウトになります。</p>
+  <p class="hint no-print">演奏画面は縦方向にスクロールできます。印刷画面ではA4向けのレイアウトになります。</p>
  </div>
 </section>
 
@@ -647,7 +685,7 @@ const CHORDS={
 /*
  横向コード図。
  上が1弦（高音）、下が6弦（低音）。
- 弦の端が図の外側へ出ないように調整。
+ 弦の並びや指の位置は変えず、図の左右端を枠内に収める。
 */
 function diagramSvg(name){
  const fing=CHORDS[name];
@@ -665,7 +703,7 @@ function diagramSvg(name){
 
  let svg=`<svg class="sheetdiagram" viewBox="0 0 ${width} ${height}" aria-label="${esc(name)} コード図" role="img">`;
 
- /* 弦：左右の端をフレット枠の内側に収める */
+ /* 弦の端をフレット枠内に収める */
  for(let i=0;i<6;i++){
   const y=yString(i);
   const sw=[1.1,1,.85,.7,.55,.4][i];
@@ -855,7 +893,7 @@ function buildPalette(){
  });
 }
 
-/* 歌詞の文字位置を保ちながらコードとコード図を表示 */
+/* 歌詞の文字位置を保ちながらコード名・図・歌詞を表示 */
 function makeSheet(body){
  const container=document.createElement('div');
 
@@ -881,6 +919,11 @@ function makeSheet(body){
    const unit=document.createElement('span');
    unit.className='sheetunit';
 
+   /* コード名を図の上に置く */
+   const chord=document.createElement('span');
+   chord.className='sheetchord';
+   chord.textContent=pending||'\u00a0';
+
    const top=document.createElement('span');
    top.className='sheetunit-top';
 
@@ -890,23 +933,23 @@ function makeSheet(body){
     top.insertAdjacentHTML('beforeend',diagram);
    }
 
-   const chord=document.createElement('span');
-   chord.className='sheetchord';
-   chord.textContent=pending||'\u00a0';
-
    const lyric=document.createElement('span');
    lyric.className='sheetlyric';
    lyric.textContent=token;
 
-   unit.append(top,chord,lyric);
+   unit.append(chord,top,lyric);
    content.append(unit);
    pending='';
   }
 
-  /* 行末にコードだけが残った場合も表示する */
+  /* 行末にコードだけが残った場合も表示 */
   if(pending){
    const unit=document.createElement('span');
    unit.className='sheetunit';
+
+   const chord=document.createElement('span');
+   chord.className='sheetchord';
+   chord.textContent=pending;
 
    const top=document.createElement('span');
    top.className='sheetunit-top hasdiagram';
@@ -914,15 +957,11 @@ function makeSheet(body){
    const diagram=diagramSvg(pending);
    if(diagram)top.insertAdjacentHTML('beforeend',diagram);
 
-   const chord=document.createElement('span');
-   chord.className='sheetchord';
-   chord.textContent=pending;
-
    const lyric=document.createElement('span');
    lyric.className='sheetlyric';
    lyric.textContent=' ';
 
-   unit.append(top,chord,lyric);
+   unit.append(chord,top,lyric);
    content.append(unit);
   }
 
@@ -1011,17 +1050,17 @@ function normalizeSectionTitle(title){
 /*
  曲を表示する。
  ・イントロは冒頭
- ・歌詞欄に【間奏】と書いた場所に間奏を挿入
+ ・歌詞欄の【間奏】の位置に間奏を挿入
  ・アウトロは最後
  ・それ以外の進行は従来どおり冒頭に表示
- ・間奏マーカーがない既存曲は、間奏を冒頭に表示して内容を保つ
+ ・間奏マーカーがない既存曲は、間奏を冒頭に表示
 */
 function makeSongDisplay(body,progress){
  const container=document.createElement('div');
  const sections=parseProgress(progress);
 
  const introTitles=['イントロ','intro'];
- const interludeTitles=['間奏','interlude','ギターソロ'];
+ const interludeTitles=['間奏','interlude','ギターソロ','solo'];
  const outroTitles=['アウトロ','outro'];
 
  const isTitle=(item,list)=>list.includes(normalizeSectionTitle(item.title));
@@ -1030,14 +1069,11 @@ function makeSongDisplay(body,progress){
  const interludes=sections.filter(item=>isTitle(item,interludeTitles));
  const outros=sections.filter(item=>isTitle(item,outroTitles));
 
- const placedTitles=new Set([
-  ...intros,...interludes,...outros
- ]);
-
+ const placedTitles=new Set([...intros,...interludes,...outros]);
  const others=sections.filter(item=>!placedTitles.has(item));
 
- /* 間奏マーカーがあるかを先に確認 */
  const lines=String(body||'').replace(/\r/g,'').split('\n');
+
  const markerTitles=lines.map(line=>{
   const match=line.trim().match(/^【([^】]+)】$/);
   return match?normalizeSectionTitle(match[1]):null;
@@ -1047,16 +1083,14 @@ function makeSongDisplay(body,progress){
   title&&interludeTitles.includes(title)
  );
 
- /* イントロと、従来どおり冒頭に置く進行 */
  intros.forEach(item=>container.append(makeProgressSection(item)));
  others.forEach(item=>container.append(makeProgressSection(item)));
 
- /* 間奏マーカーがない曲は、従来どおり冒頭に表示 */
+ /* 間奏マーカーがない既存曲は、従来どおり冒頭に表示 */
  if(!hasInterludeMarker){
   interludes.forEach(item=>container.append(makeProgressSection(item)));
  }
 
- /* 歌詞を1行ずつ描画し、マーカー位置に進行を挿入 */
  lines.forEach(line=>{
   const match=line.trim().match(/^【([^】]+)】$/);
 
@@ -1069,7 +1103,6 @@ function makeSongDisplay(body,progress){
     return;
    }
 
-   /* ほかのタイトルが進行に登録されていれば、その位置に表示 */
    const matchedSections=sections.filter(item=>
     normalizeSectionTitle(item.title)===markerTitle
    );
@@ -1083,7 +1116,6 @@ function makeSongDisplay(body,progress){
   container.append(makeSheet(line));
  });
 
- /* アウトロは最後 */
  outros.forEach(item=>container.append(makeProgressSection(item)));
 
  return container;
