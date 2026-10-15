@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#6d45b8">
+<meta name="description" content="自分専用のギターコード譜アプリ">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" href="./icon-192.png">
+<title>MySongs</title>
+<style>
+:root{--purple:#6d45b8;--purple2:#8b6ad0;--bg:#f7f4fc;--ink:#262132;--muted:#706a7d;--line:#e4dced;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif}
+header{background:linear-gradient(135deg,#59349e,#8d69cf);color:white;padding:18px 16px 16px;position:sticky;top:0;z-index:5;box-shadow:0 3px 12px #38205a22}
+.headrow{display:flex;align-items:center;gap:10px}.logo{width:38px;height:38px;border-radius:12px;background:#ffffff25;display:grid;place-items:center;font-size:23px}
+h1{font-size:22px;margin:0;letter-spacing:.2px}header p{font-size:12px;margin:3px 0 0;opacity:.88}
+main{max-width:760px;margin:0 auto;padding:14px 12px 40px}
+button,.filelabel{border:0;border-radius:12px;padding:11px 13px;background:var(--purple);color:#fff;font-weight:650;font-size:14px;cursor:pointer}
+button.secondary,.filelabel.secondary{background:#eee8f8;color:#4d347b}button.ghost{background:transparent;color:var(--purple);border:1px solid var(--line)}button.danger{background:#a83b59}
+button:active{transform:scale(.98)}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;margin:10px 0;box-shadow:0 3px 12px #38205a08}
+input,textarea,select{font:inherit;width:100%;border:1px solid #d9cde8;border-radius:10px;padding:11px;background:#fff;color:var(--ink)}
+label{display:block;font-size:13px;font-weight:700;margin:12px 0 6px}.hint{font-size:12px;color:var(--muted);line-height:1.6}
+.songrow{display:flex;align-items:center;gap:10px;padding:12px;border-bottom:1px solid #f0ebf6}.songrow:last-child{border-bottom:0}
+.songtitle{font-weight:750;flex:1;min-width:0;overflow-wrap:anywhere}.songmeta{font-size:12px;color:var(--muted);margin-top:3px}
+.smallbtn{padding:8px 10px;font-size:12px;border-radius:9px;white-space:nowrap}
+.hidden{display:none!important}.sectiontitle{font-size:17px;margin:6px 0 10px}.topline{display:flex;align-items:center;justify-content:space-between;gap:8px}
+#sheetTitle{font-size:20px;margin:2px 0 12px}
+.sheet{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;overflow-wrap:anywhere}
+.sheetline{display:flex;flex-wrap:wrap;align-items:flex-end;line-height:1.6;min-height:1.6em;white-space:pre-wrap;margin:0 0 2px}
+.segment{display:inline-flex;flex-direction:column;align-items:flex-start;vertical-align:bottom;white-space:pre}
+.chord{font-weight:800;color:#7144bb;font-size:.78em;line-height:1.15;min-height:1.15em;white-space:pre}
+.lyric{font-size:15px;line-height:1.4;white-space:pre}
+.sheet.compact .lyric{font-size:13.5px}.sheet.compact .sheetline{line-height:1.35;margin-bottom:1px}
+#scrollArea{max-height:62vh;overflow:auto;scroll-behavior:smooth}
+.scrolltools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0}
+.scrolltools input[type=range]{width:120px;padding:0}
+#editorText{min-height:230px;line-height:1.65;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.notice{padding:10px 12px;background:#f0eafb;border-radius:12px;font-size:12px;line-height:1.6;color:#513b79}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
+@media print{
+  body{background:white!important;color:#000!important}header,.no-print,#homeView,#editView,footer{display:none!important}
+  main{max-width:none;margin:0;padding:0}.card,.sheet{border:0;box-shadow:none;padding:0;margin:0;border-radius:0}
+  #playView{display:block!important}.print-only{display:block!important}#scrollArea{max-height:none;overflow:visible}
+  #sheetTitle{font-size:16pt;margin:0 0 10pt}.sheetline{break-inside:avoid;margin-bottom:2pt}
+  .chord{color:#000;font-size:9pt}.lyric{font-size:10pt}.sheet.compact .lyric{font-size:9pt}
+  @page{size:A4;margin:12mm}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="headrow"><div class="logo">♫</div><div><h1>MySongs</h1><p>自分だけのギターコード譜</p></div></div>
+</header>
+<main>
+  <section id="homeView">
+    <div class="toolbar">
+      <button id="newSongBtn">＋ 曲を追加</button>
+      <button id="backupBtn" class="secondary">バックアップ</button>
+      <label class="filelabel secondary" for="restoreFile" style="margin:0">復元</label>
+      <input id="restoreFile" class="hidden" type="file" accept=".json,application/json">
+    </div>
+    <div class="notice">曲はこのスマホのブラウザ内に保存されます。万が一に備えて、ときどき「バックアップ」を押し、保存されたJSONファイルを別の場所にも保管してください。</div>
+    <div class="card">
+      <div class="topline"><h2 class="sectiontitle">マイソング</h2><span id="songCount" class="hint">0曲</span></div>
+      <div id="songList"></div>
+      <div id="emptyState" class="hint">まだ曲がありません。「＋ 曲を追加」から登録してね。</div>
+    </div>
+  </section>
+
+  <section id="editView" class="hidden">
+    <div class="toolbar"><button id="backFromEdit" class="ghost">← 曲一覧</button><button id="saveSongBtn">保存する</button></div>
+    <div class="card">
+      <h2 class="sectiontitle">曲の登録・編集</h2>
+      <label for="songTitleInput">曲名</label><input id="songTitleInput" placeholder="例：チェリー">
+      <label for="artistInput">アーティスト（任意）</label><input id="artistInput" placeholder="例：スピッツ">
+      <label for="editorText">歌詞とコード</label>
+      <textarea id="editorText" spellcheck="false" placeholder="[G]君を忘れない&#10;[D]曲がりくねった道を行く"></textarea>
+      <p class="hint">コードを付けたい場所に [G] や [Am] のように入力します。例：<br><b>[G]君を忘れない</b><br>コードは歌詞の上に表示されます。改行はそのまま反映されます。</p>
+      <div class="toolbar"><button id="saveSongBtn2">保存する</button><button id="deleteSongBtn" class="danger">この曲を削除</button></div>
+    </div>
+  </section>
+
+  <section id="playView" class="hidden">
+    <div class="toolbar no-print">
+      <button id="backFromPlay" class="ghost">← 曲一覧</button>
+      <button id="editCurrentBtn" class="secondary">編集</button>
+      <button id="printBtn" class="secondary">印刷・PDF保存</button>
+    </div>
+    <div class="card">
+      <div class="topline no-print"><span class="hint">演奏画面</span><label style="display:flex;align-items:center;gap:6px;margin:0;font-weight:500"><input id="compactToggle" type="checkbox" checked style="width:auto"> コンパクト表示</label></div>
+      <h2 id="sheetTitle"></h2>
+      <div id="scrollArea"><div id="sheetContent" class="sheet compact"></div></div>
+      <div class="scrolltools no-print">
+        <button id="scrollStartBtn">▶ 自動スクロール</button>
+        <button id="scrollPauseBtn" class="secondary">一時停止</button>
+        <label style="display:flex;align-items:center;gap:6px;margin:0;font-weight:500">速度 <input id="speedRange" type="range" min="1" max="10" value="3"><span id="speedValue">3</span></label>
+      </div>
+      <p class="hint no-print">画面を上下に動かして手動スクロールもできます。印刷画面ではA4向けのレイアウトになります。</p>
+    </div>
+  </section>
+  <footer>MySongs · 広告なし</footer>
+</main>
+<script>
+const STORE_KEY='mysongs_songs_v1';
+let songs=[], editingId=null, currentId=null, scrollTimer=null;
+const $=id=>document.getElementById(id);
+function loadSongs(){try{songs=JSON.parse(localStorage.getItem(STORE_KEY)||'[]');if(!Array.isArray(songs))songs=[]}catch(e){songs=[]}}
+function saveSongs(){localStorage.setItem(STORE_KEY,JSON.stringify(songs))}
+function uid(){return 's'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function show(view){['homeView','editView','playView'].forEach(v=>$(v).classList.toggle('hidden',v!==view));if(view!=='playView')stopScroll();window.scrollTo(0,0)}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function renderList(){
+ $('songList').innerHTML='';
+ $('songCount').textContent=songs.length+'曲';
+ $('emptyState').classList.toggle('hidden',songs.length>0);
+ [...songs].sort((a,b)=>a.title.localeCompare(b.title,'ja')).forEach(song=>{
+  const row=document.createElement('div');row.className='songrow';
+  const info=document.createElement('div');info.className='songtitle';info.innerHTML=esc(song.title||'（曲名なし）')+'<div class="songmeta">'+esc(song.artist||'')+'</div>';
+  const open=document.createElement('button');open.className='smallbtn';open.textContent='開く';open.onclick=()=>openSong(song.id);
+  const edit=document.createElement('button');edit.className='smallbtn secondary';edit.textContent='編集';edit.onclick=()=>editSong(song.id);
+  row.append(info,open,edit);$('songList').append(row);
+ });
+}
+function newSong(){editingId=null;$('songTitleInput').value='';$('artistInput').value='';$('editorText').value='';$('deleteSongBtn').classList.add('hidden');show('editView')}
+function editSong(id){const s=songs.find(x=>x.id===id);if(!s)return;editingId=id;$('songTitleInput').value=s.title||'';$('artistInput').value=s.artist||'';$('editorText').value=s.body||'';$('deleteSongBtn').classList.remove('hidden');show('editView')}
+function saveSong(){
+ const title=$('songTitleInput').value.trim();if(!title){alert('曲名を入力してね。');$('songTitleInput').focus();return}
+ const song={id:editingId||uid(),title,artist:$('artistInput').value.trim(),body:$('editorText').value,updatedAt:new Date().toISOString()};
+ const i=songs.findIndex(x=>x.id===song.id);if(i>=0)songs[i]=song;else songs.push(song);
+ saveSongs();renderList();currentId=song.id;openSong(song.id);
+}
+function deleteSong(){if(!editingId)return;if(!confirm('この曲を削除する？バックアップがあるか確認してね。'))return;songs=songs.filter(x=>x.id!==editingId);saveSongs();renderList();show('homeView')}
+function makeSheet(body){
+ const container=document.createElement('div');
+ (body||'').replace(/\r/g,'').split('\n').forEach(line=>{
+  const row=document.createElement('div');row.className='sheetline';
+  // Each [Chord] marks the chord above the text segment that follows.
+  const re=/\[([^\]]+)\]/g;let last=0,match;
+  while((match=re.exec(line))!==null){
+   if(match.index>last){const plain=line.slice(last,match.index);const seg=document.createElement('span');seg.className='segment';seg.innerHTML='<span class="chord">&nbsp;</span><span class="lyric">'+esc(plain)+'</span>';row.append(seg)}
+   const nextMatch=re.exec(line);re.lastIndex=match.index+match[0].length; // handled below by simpler token split
+   break;
+  }
+  const parts=line.split(/(\[[^\]]+\])/g);
+  row.innerHTML='';
+  let pending='';
+  parts.forEach(part=>{
+   const m=part.match(/^\[([^\]]+)\]$/);
+   if(m){pending=m[1];return}
+   if(part.length||pending){
+    const seg=document.createElement('span');seg.className='segment';
+    const chord=document.createElement('span');chord.className='chord';chord.textContent=pending||'\u00a0';
+    const lyric=document.createElement('span');lyric.className='lyric';lyric.textContent=part||' ';
+    seg.append(chord,lyric);row.append(seg);pending='';
+   }
+  });
+  if(!row.children.length){const seg=document.createElement('span');seg.className='segment';seg.innerHTML='<span class="chord">&nbsp;</span><span class="lyric">&nbsp;</span>';row.append(seg)}
+  container.append(row);
+ });
+ return container;
+}
+function openSong(id){const s=songs.find(x=>x.id===id);if(!s)return;currentId=id;$('sheetTitle').textContent=s.title+(s.artist?' — '+s.artist:'');$('sheetContent').innerHTML='';$('sheetContent').append(makeSheet(s.body));$('sheetContent').classList.toggle('compact',$('compactToggle').checked);show('playView')}
+function startScroll(){stopScroll();const area=$('scrollArea');const speed=Number($('speedRange').value);scrollTimer=setInterval(()=>{area.scrollTop+=speed*.35;if(area.scrollTop+area.clientHeight>=area.scrollHeight-1)stopScroll()},50);$('scrollStartBtn').textContent='▶ スクロール中'}
+function stopScroll(){if(scrollTimer){clearInterval(scrollTimer);scrollTimer=null}const b=$('scrollStartBtn');if(b)b.textContent='▶ 自動スクロール'}
+function backup(){
+ const payload={app:'MySongs',version:1,createdAt:new Date().toISOString(),songs};
+ const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+ const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='MySongs-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.append(a);a.click();a.remove();URL.revokeObjectURL(url);
+ alert('バックアップファイルを保存する操作を行ったよ。ダウンロード先を確認して、別の場所にも保管してね。');
+}
+function restoreFile(file){
+ if(!file)return;const reader=new FileReader();
+ reader.onload=()=>{try{const data=JSON.parse(reader.result);const incoming=Array.isArray(data)?data:data.songs;if(!Array.isArray(incoming))throw new Error('format');
+  if(!confirm('バックアップから '+incoming.length+' 曲を読み込みます。今ある曲に追加・更新します（既存の曲は一括削除しません）。続ける？'))return;
+  const map=new Map(songs.map(s=>[s.id,s]));incoming.forEach((s,i)=>{if(!s||typeof s!=='object')return;const item={id:String(s.id||uid()),title:String(s.title||'（曲名なし）'),artist:String(s.artist||''),body:String(s.body||''),updatedAt:s.updatedAt||new Date().toISOString()};map.set(item.id,item)});
+  songs=[...map.values()];saveSongs();renderList();alert('復元が完了したよ。曲一覧を確認してね。');
+ }catch(e){alert('バックアップファイルを読み込めなかったよ。MySongsで作成したJSONファイルを選んでね。')}
+ };reader.readAsText(file);
+}
+$('newSongBtn').onclick=newSong;$('saveSongBtn').onclick=saveSong;$('saveSongBtn2').onclick=saveSong;$('deleteSongBtn').onclick=deleteSong;
+$('backFromEdit').onclick=()=>{renderList();show('homeView')};$('backFromPlay').onclick=()=>{renderList();show('homeView')};
+$('editCurrentBtn').onclick=()=>editSong(currentId);$('printBtn').onclick=()=>{stopScroll();window.print()};
+$('scrollStartBtn').onclick=startScroll;$('scrollPauseBtn').onclick=stopScroll;
+$('speedRange').oninput=()=>{$('speedValue').textContent=$('speedRange').value};
+$('compactToggle').onchange=()=>{$('sheetContent').classList.toggle('compact',$('compactToggle').checked)};
+$('backupBtn').onclick=backup;$('restoreFile').onchange=e=>{restoreFile(e.target.files[0]);e.target.value=''};
+loadSongs();renderList();
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+</script>
+</body>
+</html>
