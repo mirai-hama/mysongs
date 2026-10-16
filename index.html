@@ -230,7 +230,7 @@ button.previewChar.selected{background:#e8dcff;outline:1px solid #b79beb}
  pointer-events:none
 }
 
-/* コード選択表：タップした文字の近くに重ねて表示 */
+/* コード選択表 */
 #chordPicker{
  position:fixed;
  z-index:20;
@@ -243,7 +243,7 @@ button.previewChar.selected{background:#e8dcff;outline:1px solid #b79beb}
  box-shadow:0 8px 28px #38205a40;
 }
 
-/* コード選択表：B7などが端で欠けないようにグリッド表示 */
+/* コード選択表 */
 .palette{
  display:grid;
  grid-template-columns:repeat(auto-fill,minmax(48px,1fr));
@@ -662,6 +662,7 @@ const CHORDS={
 'F#':[2,4,4,3,2,2],
 'G':[3,2,0,0,0,3],
 'Gm':[3,5,5,3,3,3],
+'G/B':[-1,2,0,0,0,3],
 'G7':[3,2,0,0,0,1],
 'Gmaj7':[3,2,0,0,0,2],
 'Gsus4':[3,3,0,0,1,3],
@@ -699,7 +700,8 @@ const CHORDS={
 /*
  横向コード図。
  上が1弦（高音）、下が6弦（低音）。
- 弦の並びや指の位置は変えず、図の左右端を枠内に収める。
+ CHORDSの配列は6弦から1弦の順番で、
+ 図の縦位置は6弦を下、1弦を上にして表示する。
 */
 function diagramSvg(name){
  const fing=CHORDS[name];
@@ -712,23 +714,22 @@ function diagramSvg(name){
  const xNut=11,top=5,fretW=6.1,stringGap=5.7;
  const width=45,height=39;
  const xEnd=xNut+fretW*4;
- const yBottom=top+5*stringGap;
  const yString=i=>top+(5-i)*stringGap;
 
  let svg=`<svg class="sheetdiagram" viewBox="0 0 ${width} ${height}" aria-label="${esc(name)} コード図" role="img">`;
 
- /* 弦の端をフレット枠内に収める */
+ /* 横線は弦。上が1弦、下が6弦 */
  for(let i=0;i<6;i++){
   const y=yString(i);
   const sw=[1.1,1,.85,.7,.55,.4][i];
   svg+=`<line x1="${xNut+0.25}" y1="${y}" x2="${xEnd-0.25}" y2="${y}" stroke="#777" stroke-width="${sw}"/>`;
  }
 
- /* フレットとナット */
+ /* 縦線はフレット */
  for(let f=0;f<=4;f++){
   const x=xNut+f*fretW;
   const isNut=f===0&&base===0;
-  svg+=`<line x1="${x}" y1="${top-1}" x2="${x}" y2="${yBottom+1}" stroke="${isNut?'#222':'#999'}" stroke-width="${isNut?'2.2':'.65'}"/>`;
+  svg+=`<line x1="${x}" y1="${top-1}" x2="${x}" y2="${top+5*stringGap+1}" stroke="${isNut?'#222':'#999'}" stroke-width="${isNut?'2.2':'.65'}"/>`;
  }
 
  if(base>0){
@@ -856,8 +857,6 @@ function showPickerNear(ch){
  const gap=8;
 
  picker.classList.remove('hidden');
-
- /* 表示後の大きさを取得して、画面からはみ出さない位置に調整 */
  picker.style.visibility='hidden';
  picker.style.left=gap+'px';
  picker.style.top=gap+'px';
@@ -961,7 +960,6 @@ function makeSheet(body){
    const unit=document.createElement('span');
    unit.className='sheetunit';
 
-   /* コード名を図の上に置く */
    const chord=document.createElement('span');
    chord.className='sheetchord';
    chord.textContent=pending||'\u00a0';
@@ -984,7 +982,6 @@ function makeSheet(body){
    pending='';
   }
 
-  /* 行末にコードだけが残った場合も表示 */
   if(pending){
    const unit=document.createElement('span');
    unit.className='sheetunit';
@@ -1128,7 +1125,6 @@ function makeSongDisplay(body,progress){
  intros.forEach(item=>container.append(makeProgressSection(item)));
  others.forEach(item=>container.append(makeProgressSection(item)));
 
- /* 間奏マーカーがない既存曲は、従来どおり冒頭に表示 */
  if(!hasInterludeMarker){
   interludes.forEach(item=>container.append(makeProgressSection(item)));
  }
