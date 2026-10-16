@@ -310,9 +310,9 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
  main{padding:10px 8px 30px}
  .card{padding:11px}
  .sheet{padding:8px}
- .sheetdiagram{width:35px;height:31px}
- .sheetunit-top.hasdiagram{width:35px}
- .sheetunit-top{height:32px}
+ .sheetdiagram{width:39px;height:34px}
+ .sheetunit-top.hasdiagram{width:39px}
+ .sheetunit-top{height:35px}
  .sheetchord{font-size:11px}
  .sheetlyric{font-size:14px}
  .sheet.compact .sheetlyric{font-size:13px}
@@ -698,38 +698,45 @@ const CHORDS={
 };
 
 /*
- 横向コード図。
- 上が1弦（高音）、下が6弦（低音）。
- CHORDSの配列は6弦から1弦の順番で、
- 図の縦位置は6弦を下、1弦を上にして表示する。
+ コード図は上が1弦、下が6弦。
+ 5フレット分を表示する。
+ 高いポジションのコードは、押さえる位置に合わせて
+ 表示範囲を移動する。
 */
 function diagramSvg(name){
  const fing=CHORDS[name];
  if(!fing)return '';
 
  const active=fing.filter(v=>v>0);
- const min=active.length?Math.min(...active):1;
- const base=min>4?min-1:0;
+ const maxFret=active.length?Math.max(...active):0;
+ const minFret=active.length?Math.min(...active):1;
 
- const xNut=11,top=5,fretW=6.1,stringGap=5.7;
+ /* 6フレット以上を使うコードは、適切な位置から表示 */
+ const base=maxFret>5?Math.max(0,minFret-1):0;
+
+ const xNut=9.5,top=5,fretW=6.0,stringGap=5.7;
  const width=45,height=39;
- const xEnd=xNut+fretW*4;
+ const xEnd=xNut+fretW*5;
+ const yBottom=top+5*stringGap;
+
+ /* fing配列は6弦から1弦。
+    図では1弦が上、6弦が下になるようにする */
  const yString=i=>top+(5-i)*stringGap;
 
  let svg=`<svg class="sheetdiagram" viewBox="0 0 ${width} ${height}" aria-label="${esc(name)} コード図" role="img">`;
 
- /* 横線は弦。上が1弦、下が6弦 */
+ /* 横線＝弦 */
  for(let i=0;i<6;i++){
   const y=yString(i);
   const sw=[1.1,1,.85,.7,.55,.4][i];
-  svg+=`<line x1="${xNut+0.25}" y1="${y}" x2="${xEnd-0.25}" y2="${y}" stroke="#777" stroke-width="${sw}"/>`;
+  svg+=`<line x1="${xNut}" y1="${y}" x2="${xEnd}" y2="${y}" stroke="#777" stroke-width="${sw}"/>`;
  }
 
- /* 縦線はフレット */
- for(let f=0;f<=4;f++){
+ /* 縦線＝フレット。5フレット分を表示する */
+ for(let f=0;f<=5;f++){
   const x=xNut+f*fretW;
   const isNut=f===0&&base===0;
-  svg+=`<line x1="${x}" y1="${top-1}" x2="${x}" y2="${top+5*stringGap+1}" stroke="${isNut?'#222':'#999'}" stroke-width="${isNut?'2.2':'.65'}"/>`;
+  svg+=`<line x1="${x}" y1="${top-1}" x2="${x}" y2="${yBottom+1}" stroke="${isNut?'#222':'#999'}" stroke-width="${isNut?'2.2':'.65'}"/>`;
  }
 
  if(base>0){
@@ -750,7 +757,9 @@ function diagramSvg(name){
   const y1=yString(barre.first);
   const y2=yString(barre.last);
   const barWidth=2.5;
-  svg+=`<rect x="${x-barWidth/2}" y="${Math.min(y1,y2)-1.4}" width="${barWidth}" height="${Math.abs(y2-y1)+2.8}" rx="1.2" fill="#171717"/>`;
+  if(x>=xNut&&x<=xEnd){
+   svg+=`<rect x="${x-barWidth/2}" y="${Math.min(y1,y2)-1.4}" width="${barWidth}" height="${Math.abs(y2-y1)+2.8}" rx="1.2" fill="#171717"/>`;
+  }
  }
 
  /* 指位置、開放弦、ミュート */
