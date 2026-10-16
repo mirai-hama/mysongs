@@ -20,18 +20,12 @@
 }
 *{box-sizing:border-box}
 body{
- margin:0;
- background:var(--bg);
- color:var(--ink);
+ margin:0;background:var(--bg);color:var(--ink);
  font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif
 }
 header{
  background:linear-gradient(135deg,#59349e,#8d69cf);
- color:white;
- padding:18px 16px;
- position:sticky;
- top:0;
- z-index:5;
+ color:white;padding:18px 16px;position:sticky;top:0;z-index:5;
  box-shadow:0 3px 12px #38205a22
 }
 .headrow{display:flex;align-items:center;gap:10px}
@@ -84,74 +78,40 @@ label{display:block;font-size:13px;font-weight:700;margin:12px 0 6px}
  line-height:1.6;margin:0 0 7px;min-width:0;max-width:100%
 }
 .sheetlinecontent{
- display:flex;
- align-items:flex-start;
- flex-wrap:wrap;
- white-space:normal;
- min-height:1.6em;
- width:100%;
- max-width:100%;
- min-width:0;
- overflow-wrap:anywhere
+ display:flex;align-items:flex-start;flex-wrap:wrap;white-space:normal;
+ min-height:1.6em;width:100%;max-width:100%;min-width:0;overflow-wrap:anywhere
 }
 .sheetunit{
- display:inline-flex;
- flex-direction:column;
- align-items:center;
- justify-content:flex-end;
- flex:0 0 auto;
- min-width:0;
- max-width:100%;
+ display:inline-flex;flex-direction:column;align-items:center;
+ justify-content:flex-end;flex:0 0 auto;min-width:0;max-width:100%;
  vertical-align:bottom
 }
 .sheetunit-top{
- display:flex;
- align-items:flex-start;
- justify-content:center;
- width:1em;
- height:35px;
- overflow:visible;
- position:relative
+ display:flex;align-items:flex-start;justify-content:center;
+ width:1em;height:35px;overflow:visible;position:relative
 }
-.sheetunit-top.hasdiagram{width:39px}
+.sheetunit-top.hasdiagram{
+ width:auto;min-width:39px;gap:0
+}
 .sheetchord{
- display:block;
- height:18px;
- min-width:1em;
- max-width:100%;
- text-align:center;
- font-weight:800;
- color:var(--purple);
- font-size:12px;
- line-height:18px;
- white-space:nowrap;
- overflow:visible
+ display:block;height:18px;min-width:1em;max-width:100%;
+ text-align:center;font-weight:800;color:var(--purple);
+ font-size:12px;line-height:18px;white-space:nowrap;overflow:visible
 }
 .sheetdiagram{
- display:block;
- width:39px;
- height:34px;
- overflow:hidden;
- margin:0;
- flex:0 0 auto
+ display:block;width:39px;height:34px;overflow:hidden;
+ margin:0;flex:0 0 auto
 }
 .sheetlyric{
- font-size:15px;
- line-height:1.4;
- white-space:pre;
- max-width:100%
+ font-size:15px;line-height:1.4;white-space:pre;max-width:100%
 }
 .sheet.compact .sheetlyric{font-size:13.5px}
 .sheet.compact .sheetline{line-height:1.35;margin-bottom:4px}
 
 /* 演奏画面は縦スクロールのみ */
 #scrollArea{
- max-height:62vh;
- overflow-x:hidden;
- overflow-y:auto;
- scroll-behavior:smooth;
- min-width:0;
- max-width:100%;
+ max-height:62vh;overflow-x:hidden;overflow-y:auto;
+ scroll-behavior:smooth;min-width:0;max-width:100%;
  overscroll-behavior-x:none
 }
 .scrolltools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0}
@@ -165,141 +125,81 @@ label{display:block;font-size:13px;font-weight:700;margin:12px 0 6px}
  font-size:12px;line-height:1.6;color:#513b79
 }
 
-/* 歌詞プレビュー：編集時は横方向にも確認できる */
+/* 歌詞プレビュー */
 #lyricPreview{
- overflow-x:auto;
- overflow-y:hidden;
- background:#fff;border:1px solid var(--line);
- border-radius:12px;padding:12px;min-height:60px;
- touch-action:pan-x pan-y;
- max-width:100%
+ overflow-x:auto;overflow-y:hidden;background:#fff;
+ border:1px solid var(--line);border-radius:12px;padding:12px;
+ min-height:60px;touch-action:pan-x pan-y;max-width:100%
 }
 .previewLine{
- display:flex;
- align-items:flex-end;
- min-height:53px;
- white-space:pre;
- margin-bottom:5px;
- width:max-content;
- min-width:100%
+ display:flex;align-items:flex-end;min-height:53px;
+ white-space:pre;margin-bottom:5px;width:max-content;min-width:100%
 }
 button.previewChar{
- appearance:none;
- -webkit-appearance:none;
- display:inline-flex;
- flex-direction:column;
- align-items:center;
- justify-content:flex-end;
- flex:0 0 auto;
- min-width:9px;
- min-height:48px;
- margin:0;
- padding:0 1px;
- border:0;
- border-radius:4px;
- background:transparent;
- color:inherit;
- box-shadow:none;
- font:inherit;
- font-weight:400;
- cursor:pointer;
- touch-action:manipulation;
- -webkit-tap-highlight-color:#d9c8ff88
+ appearance:none;-webkit-appearance:none;display:inline-flex;
+ flex-direction:column;align-items:center;justify-content:flex-end;
+ flex:0 0 auto;min-width:9px;min-height:48px;margin:0;padding:0 1px;
+ border:0;border-radius:4px;background:transparent;color:inherit;
+ box-shadow:none;font:inherit;font-weight:400;cursor:pointer;
+ touch-action:manipulation;-webkit-tap-highlight-color:#d9c8ff88
 }
 button.previewChar:active{background:#eee5fb;transform:none}
 button.previewChar:focus-visible{outline:2px solid #8b6ad0;outline-offset:1px}
 button.previewChar.selected{background:#e8dcff;outline:1px solid #b79beb}
+
+/* 空白位置もタップしやすくする */
+button.previewChar.previewSpace{
+ min-width:17px;
+ background:#f8f4ff;
+ border-bottom:1px dashed #c7b4e9;
+}
+button.previewChar.previewSpace.selected{background:#e8dcff}
 .previewChord{
- display:block;
- height:19px;
- width:max-content;
- min-width:100%;
- padding:0 2px;
- font-size:12px;
- font-weight:800;
- color:var(--purple);
- white-space:nowrap;
- text-align:center;
- pointer-events:none
+ display:block;height:19px;width:max-content;min-width:100%;
+ padding:0 2px;font-size:12px;font-weight:800;color:var(--purple);
+ white-space:nowrap;text-align:center;pointer-events:none
 }
 .previewLyric{
- display:block;
- font-size:16px;
- line-height:1.5;
- white-space:pre;
- pointer-events:none
+ display:block;font-size:16px;line-height:1.5;
+ white-space:pre;pointer-events:none
 }
 
 /* コード選択表 */
 #chordPicker{
- position:fixed;
- z-index:20;
- width:min(360px,calc(100vw - 16px));
- max-height:55vh;
- overflow-y:auto;
- overflow-x:hidden;
- overscroll-behavior:contain;
- margin:0!important;
- box-shadow:0 8px 28px #38205a40;
+ position:fixed;z-index:20;width:min(360px,calc(100vw - 16px));
+ max-height:55vh;overflow-y:auto;overflow-x:hidden;
+ overscroll-behavior:contain;margin:0!important;
+ box-shadow:0 8px 28px #38205a40
 }
-
-/* コード選択表 */
 .palette{
- display:grid;
- grid-template-columns:repeat(auto-fill,minmax(48px,1fr));
- gap:7px;
- margin-top:10px;
- width:100%;
- min-width:0;
- overflow:visible
+ display:grid;grid-template-columns:repeat(auto-fill,minmax(48px,1fr));
+ gap:7px;margin-top:10px;width:100%;min-width:0;overflow:visible
 }
 .palette button{
- display:flex;
- align-items:center;
- justify-content:center;
- width:100%;
- min-width:0;
- max-width:100%;
- padding:10px 2px;
- white-space:nowrap;
- overflow:visible;
- font-size:13px
+ display:flex;align-items:center;justify-content:center;
+ width:100%;min-width:0;max-width:100%;padding:10px 2px;
+ white-space:nowrap;overflow:visible;font-size:13px
 }
 .palette button.chosen{background:#38205a;outline:2px solid #bca5e7}
+#addSamePositionBtn.active{
+ background:#38205a;color:white;outline:2px solid #bca5e7
+}
 
 /* イントロ・間奏・アウトロなど */
 .progress-section{
- margin:9px 0 12px;
- padding:8px 10px;
- background:#f8f5fd;
- border:1px solid #e7def4;
- border-radius:10px;
- min-width:0;
- max-width:100%;
- overflow-wrap:anywhere
+ margin:9px 0 12px;padding:8px 10px;background:#f8f5fd;
+ border:1px solid #e7def4;border-radius:10px;min-width:0;
+ max-width:100%;overflow-wrap:anywhere
 }
 .progress-title{font-size:12px;font-weight:800;color:#5d3b98;margin-bottom:5px}
 .progress-chords{
- display:flex;
- flex-wrap:wrap;
- align-items:center;
- gap:5px;
- min-width:0;
- max-width:100%
+ display:flex;flex-wrap:wrap;align-items:center;gap:5px;
+ min-width:0;max-width:100%
 }
 .progress-chord{
- display:inline-block;
- flex:0 1 auto;
- min-width:0;
- max-width:100%;
- font-size:12px;
- font-weight:750;
- color:#65439d;
- background:#eee7fa;
- border-radius:6px;
- padding:3px 6px;
- overflow-wrap:anywhere;
- white-space:normal
+ display:inline-block;flex:0 1 auto;min-width:0;max-width:100%;
+ font-size:12px;font-weight:750;color:#65439d;background:#eee7fa;
+ border-radius:6px;padding:3px 6px;overflow-wrap:anywhere;white-space:normal
 }
 .progress-separator{font-size:11px;color:#8a7b9f;flex:0 0 auto}
 .progress-note{font-size:11px;color:var(--muted);margin-top:4px}
@@ -311,7 +211,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
  .card{padding:11px}
  .sheet{padding:8px}
  .sheetdiagram{width:39px;height:34px}
- .sheetunit-top.hasdiagram{width:39px}
+ .sheetunit-top.hasdiagram{min-width:39px}
  .sheetunit-top{height:35px}
  .sheetchord{font-size:11px}
  .sheetlyric{font-size:14px}
@@ -335,8 +235,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
  .sheetlyric{font-size:10pt}
  .sheet.compact .sheetlyric{font-size:9pt}
  .progress-section{
-  break-inside:avoid;background:white;border-color:#ccc;
-  padding:5pt;margin:5pt 0
+  break-inside:avoid;background:white;border-color:#ccc;padding:5pt;margin:5pt 0
  }
  .progress-title{color:#000;font-size:9pt}
  .progress-chord{background:white;border:1px solid #bbb;color:#000;font-size:8pt}
@@ -419,7 +318,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
 例：君を忘れない
 曲がりくねった道を行く"></textarea>
 
-  <p class="hint">①歌詞を入力 → ②下のプレビューでコードを付けたい文字をタップ → ③コードを選ぶ。コードは選んだ文字の真上に付きます。コードを付けた文字をもう一度タップすると変更できます。</p>
+  <p class="hint">①歌詞を入力 → ②下のプレビューでコードを付けたい文字や空白をタップ → ③コードを選ぶ。コードは選んだ位置の真上に付きます。同じ位置に複数のコードも付けられます。</p>
   <p class="hint">間奏を入れるときは、歌詞欄の入れたい場所に「【間奏】」だけを1行で入力してね。上下を1行ずつ空けると見やすくなります。</p>
 
   <div class="topline">
@@ -433,6 +332,8 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
     <strong id="pickerTitle">コードを選択</strong>
     <button id="removeChordBtn" class="smallbtn ghost">コードを外す</button>
    </div>
+   <button id="addSamePositionBtn" class="smallbtn secondary" type="button" style="margin-top:10px;width:100%">＋ 同じ位置にコードを追加</button>
+   <p id="pickerModeHint" class="hint">通常選択：選んだ位置のコードを設定・変更します。</p>
    <div id="chordPalette" class="palette"></div>
    <p class="hint">Fなどのセーハコードは、演奏画面で黒い棒として表示されます。</p>
   </div>
@@ -494,7 +395,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
 <script>
 const STORE_KEY='mysongs_songs_v1';
 let songs=[],editingId=null,currentId=null,scrollTimer=null;
-let pendingPos=null,pendingMarker=null;
+let pendingPos=null,pendingMarker=null,addChordMode=false;
 const $=id=>document.getElementById(id);
 
 function loadSongs(){
@@ -699,9 +600,7 @@ const CHORDS={
 
 /*
  コード図は上が1弦、下が6弦。
- 5フレット分を表示する。
- 高いポジションのコードは、押さえる位置に合わせて
- 表示範囲を移動する。
+ 高いポジションのコードは表示範囲を移動する。
 */
 function diagramSvg(name){
  const fing=CHORDS[name];
@@ -710,29 +609,22 @@ function diagramSvg(name){
  const active=fing.filter(v=>v>0);
  const maxFret=active.length?Math.max(...active):0;
  const minFret=active.length?Math.min(...active):1;
-
- /* 6フレット以上を使うコードは、適切な位置から表示 */
  const base=maxFret>5?Math.max(0,minFret-1):0;
 
  const xNut=9.5,top=5,fretW=6.0,stringGap=5.7;
  const width=45,height=39;
  const xEnd=xNut+fretW*5;
  const yBottom=top+5*stringGap;
-
- /* fing配列は6弦から1弦。
-    図では1弦が上、6弦が下になるようにする */
  const yString=i=>top+(5-i)*stringGap;
 
  let svg=`<svg class="sheetdiagram" viewBox="0 0 ${width} ${height}" aria-label="${esc(name)} コード図" role="img">`;
 
- /* 横線＝弦 */
  for(let i=0;i<6;i++){
   const y=yString(i);
   const sw=[1.1,1,.85,.7,.55,.4][i];
   svg+=`<line x1="${xNut}" y1="${y}" x2="${xEnd}" y2="${y}" stroke="#777" stroke-width="${sw}"/>`;
  }
 
- /* 縦線＝フレット。5フレット分を表示する */
  for(let f=0;f<=5;f++){
   const x=xNut+f*fretW;
   const isNut=f===0&&base===0;
@@ -743,7 +635,6 @@ function diagramSvg(name){
   svg+=`<text x="0" y="4.5" font-size="4.5" fill="#555">${base+1}F</text>`;
  }
 
- /* セーハ判定 */
  const lowest=active.length?Math.min(...active):0;
  const lowIndices=fing.map((v,i)=>v===lowest&&v>0?i:-1).filter(i=>i>=0);
  let barre=null;
@@ -762,7 +653,6 @@ function diagramSvg(name){
   }
  }
 
- /* 指位置、開放弦、ミュート */
  fing.forEach((v,i)=>{
   const y=yString(i);
 
@@ -781,7 +671,7 @@ function diagramSvg(name){
  return svg+'</svg>';
 }
 
-/* 歌詞プレビュー */
+/* 歌詞プレビュー：連続するコードをまとめて扱う */
 function renderEditorPreview(){
  const area=$('lyricPreview');
  area.innerHTML='';
@@ -807,25 +697,35 @@ function renderEditorPreview(){
    const end=start+token.length;
 
    if(token.startsWith('[')&&token.endsWith(']')){
-    pending={code:token.slice(1,-1).trim(),start,end};
+    const code=token.slice(1,-1).trim();
+    if(pending){
+     pending.end=end;
+     pending.codes.push(code);
+    }else{
+     pending={start,end,codes:[code]};
+    }
     continue;
    }
+
+   const markerInfo=pending?{
+    start:pending.start,
+    end:pending.end,
+    codes:[...pending.codes]
+   }:null;
 
    const ch=document.createElement('button');
    ch.type='button';
    ch.className='previewChar';
    ch.dataset.pos=start;
-   ch.setAttribute('aria-label','「'+token+'」にコードを付ける');
+   ch.setAttribute('aria-label',
+    token===' '?'空白位置にコードを付ける':'「'+token+'」にコードを付ける'
+   );
 
-   if(pending){
-    ch.dataset.markerStart=pending.start;
-    ch.dataset.markerEnd=pending.end;
-    ch.dataset.code=pending.code;
-   }
+   if(token===' ')ch.classList.add('previewSpace');
 
    const top=document.createElement('span');
    top.className='previewChord';
-   top.textContent=pending?pending.code:'\u00a0';
+   top.textContent=markerInfo?markerInfo.codes.join(' / '):'\u00a0';
 
    const lyric=document.createElement('span');
    lyric.className='previewLyric';
@@ -835,18 +735,27 @@ function renderEditorPreview(){
 
    ch.addEventListener('click',()=>{
     pendingPos=Number(ch.dataset.pos);
+    pendingMarker=markerInfo?{
+     start:markerInfo.start,
+     end:markerInfo.end,
+     codes:[...markerInfo.codes]
+    }:null;
 
-    pendingMarker=ch.dataset.markerStart!==undefined
-     ?{start:Number(ch.dataset.markerStart),end:Number(ch.dataset.markerEnd)}
-     :null;
+    addChordMode=false;
+    $('addSamePositionBtn').classList.remove('active');
+    $('addSamePositionBtn').textContent='＋ 同じ位置にコードを追加';
+    $('pickerModeHint').textContent='通常選択：選んだ位置のコードを設定・変更します。';
 
     document.querySelectorAll('.previewChar.selected').forEach(n=>{
      n.classList.remove('selected');
     });
 
     ch.classList.add('selected');
-    $('pickerTitle').textContent='「'+token+'」に付けるコード';
-    updatePaletteSelection(ch.dataset.code||'');
+    $('pickerTitle').textContent=token===' '
+     ?'空白位置に付けるコード'
+     :'「'+token+'」に付けるコード';
+
+    updatePaletteSelection(markerInfo?markerInfo.codes:[]);
     showPickerNear(ch);
    });
 
@@ -854,12 +763,47 @@ function renderEditorPreview(){
    pending=null;
   }
 
+  /* 行末にコードがある場合も表示する */
+  if(pending){
+   const markerInfo={start:pending.start,end:pending.end,codes:[...pending.codes]};
+   const ch=document.createElement('button');
+   ch.type='button';
+   ch.className='previewChar previewSpace';
+   ch.dataset.pos=globalStart+line.length;
+   ch.setAttribute('aria-label','行末にコードを付ける');
+
+   const top=document.createElement('span');
+   top.className='previewChord';
+   top.textContent=markerInfo.codes.join(' / ');
+
+   const lyric=document.createElement('span');
+   lyric.className='previewLyric';
+   lyric.textContent=' ';
+
+   ch.append(top,lyric);
+   ch.addEventListener('click',()=>{
+    pendingPos=Number(ch.dataset.pos);
+    pendingMarker={...markerInfo,codes:[...markerInfo.codes]};
+    addChordMode=false;
+    $('addSamePositionBtn').classList.remove('active');
+    $('addSamePositionBtn').textContent='＋ 同じ位置にコードを追加';
+    $('pickerModeHint').textContent='通常選択：選んだ位置のコードを設定・変更します。';
+
+    document.querySelectorAll('.previewChar.selected').forEach(n=>n.classList.remove('selected'));
+    ch.classList.add('selected');
+    $('pickerTitle').textContent='行末に付けるコード';
+    updatePaletteSelection(markerInfo.codes);
+    showPickerNear(ch);
+   });
+   row.append(ch);
+  }
+
   area.append(row);
   globalStart+=line.length+1;
  });
 }
 
-/* タップした文字の位置に合わせてコード表を重ねる */
+/* コード表をタップ位置の近くに表示 */
 function showPickerNear(ch){
  const picker=$('chordPicker');
  const rect=ch.getBoundingClientRect();
@@ -886,36 +830,48 @@ function showPickerNear(ch){
  picker.style.visibility='';
 }
 
-function updatePaletteSelection(code){
+function updatePaletteSelection(codes){
+ const selectedCodes=Array.isArray(codes)?codes:[codes];
  document.querySelectorAll('#chordPalette button').forEach(b=>{
-  b.classList.toggle('chosen',b.dataset.chord===code);
+  b.classList.toggle('chosen',selectedCodes.includes(b.dataset.chord));
  });
 }
 
 function hidePicker(){
  $('chordPicker').classList.add('hidden');
+ $('addSamePositionBtn').classList.remove('active');
+ $('addSamePositionBtn').textContent='＋ 同じ位置にコードを追加';
+ $('pickerModeHint').textContent='通常選択：選んだ位置のコードを設定・変更します。';
  pendingPos=null;
  pendingMarker=null;
+ addChordMode=false;
 }
 
+/* 選んだ位置にコードを設定、または追加 */
 function applyChord(name){
  if(pendingPos===null)return;
 
  const text=$('editorText').value;
- const marker='['+name+']';
+ let replacement='['+name+']';
 
  if(pendingMarker){
+  if(addChordMode){
+   const codes=[...pendingMarker.codes,name];
+   replacement=codes.map(code=>'['+code+']').join('');
+  }
+
   $('editorText').value=
-   text.slice(0,pendingMarker.start)+marker+text.slice(pendingMarker.end);
+   text.slice(0,pendingMarker.start)+replacement+text.slice(pendingMarker.end);
  }else{
   $('editorText').value=
-   text.slice(0,pendingPos)+marker+text.slice(pendingPos);
+   text.slice(0,pendingPos)+replacement+text.slice(pendingPos);
  }
 
  hidePicker();
  renderEditorPreview();
 }
 
+/* 同じ位置のコードをまとめて削除 */
 function removeChord(){
  if(pendingPos===null)return;
 
@@ -943,7 +899,7 @@ function buildPalette(){
  });
 }
 
-/* 歌詞の文字位置を保ちながらコード名・図・歌詞を表示 */
+/* 歌詞と複数コードを演奏画面に表示 */
 function makeSheet(body){
  const container=document.createElement('div');
 
@@ -955,13 +911,13 @@ function makeSheet(body){
   content.className='sheetlinecontent';
 
   const re=/\[[^\]]+\]|[\s\S]/g;
-  let m,pending='';
+  let m,pending=[];
 
   while((m=re.exec(line))!==null){
    const token=m[0];
 
    if(token.startsWith('[')&&token.endsWith(']')){
-    pending=token.slice(1,-1).trim();
+    pending.push(token.slice(1,-1).trim());
     row.classList.add('haschord');
     continue;
    }
@@ -971,15 +927,17 @@ function makeSheet(body){
 
    const chord=document.createElement('span');
    chord.className='sheetchord';
-   chord.textContent=pending||'\u00a0';
+   chord.textContent=pending.length?pending.join(' / '):'\u00a0';
 
    const top=document.createElement('span');
    top.className='sheetunit-top';
 
-   const diagram=diagramSvg(pending);
-   if(diagram){
-    top.classList.add('hasdiagram');
-    top.insertAdjacentHTML('beforeend',diagram);
+   if(pending.length){
+    const diagrams=pending.map(name=>diagramSvg(name)).filter(Boolean);
+    if(diagrams.length){
+     top.classList.add('hasdiagram');
+     top.insertAdjacentHTML('beforeend',diagrams.join(''));
+    }
    }
 
    const lyric=document.createElement('span');
@@ -988,22 +946,22 @@ function makeSheet(body){
 
    unit.append(chord,top,lyric);
    content.append(unit);
-   pending='';
+   pending=[];
   }
 
-  if(pending){
+  /* 行末に付いたコードも表示する */
+  if(pending.length){
    const unit=document.createElement('span');
    unit.className='sheetunit';
 
    const chord=document.createElement('span');
    chord.className='sheetchord';
-   chord.textContent=pending;
+   chord.textContent=pending.join(' / ');
 
    const top=document.createElement('span');
    top.className='sheetunit-top hasdiagram';
-
-   const diagram=diagramSvg(pending);
-   if(diagram)top.insertAdjacentHTML('beforeend',diagram);
+   const diagrams=pending.map(name=>diagramSvg(name)).filter(Boolean);
+   if(diagrams.length)top.insertAdjacentHTML('beforeend',diagrams.join(''));
 
    const lyric=document.createElement('span');
    lyric.className='sheetlyric';
@@ -1319,6 +1277,16 @@ $('editorText').addEventListener('input',()=>{
 });
 $('refreshPreviewBtn').onclick=renderEditorPreview;
 $('removeChordBtn').onclick=removeChord;
+
+/* 同じ位置に追加するモード */
+$('addSamePositionBtn').onclick=()=>{
+ if(pendingPos===null)return;
+
+ addChordMode=true;
+ $('addSamePositionBtn').classList.add('active');
+ $('addSamePositionBtn').textContent='追加モード中';
+ $('pickerModeHint').textContent='追加モード：コードを選ぶと、今あるコードを残したまま同じ位置に追加します。';
+};
 
 buildPalette();
 loadSongs();
